@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import template.framework.test.api.CatFactsApi;
 import template.framework.test.api.model.response.CatFactResponse;
 import template.framework.test.config.PropertyReader;
+import template.framework.test.config.RetryAnalyzer;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -26,7 +27,7 @@ public class MainTests {
         assertEquals("Hello, world".length(), 12, "length is not valid");
     }
 
-    @Test
+    @Test(retryAnalyzer = RetryAnalyzer.class)
     public void catFactsApiTest() {
         catFactsApi.getFactCatBodyResponse()
                 .assertStatusCodeOk()

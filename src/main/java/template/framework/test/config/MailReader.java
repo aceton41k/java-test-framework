@@ -107,6 +107,7 @@ public class MailReader {
                         throw new MessagingException(format("Не удалось найти письмо для логина: %s за %d попыток.", login, i));
                 }
 
+                assert messages != null;
                 for (Message message : messages) {
                     try {
                         message.setFlag(Flags.Flag.DELETED, true);
