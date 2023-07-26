@@ -1,4 +1,4 @@
-# Test framework template
+# Test framework template Java
 ![pss](https://i.ibb.co/bKV9CgV/giphy.gif)
 
 ## Features:
