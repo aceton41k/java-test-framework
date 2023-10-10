@@ -4,7 +4,7 @@ import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import lombok.Getter;
-import template.framework.test.api.model.response.CatFactResponse;
+import template.framework.test.model.response.CatFactResponse;
 
 import static io.restassured.RestAssured.given;
 

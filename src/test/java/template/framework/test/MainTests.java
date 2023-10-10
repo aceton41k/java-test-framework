@@ -6,7 +6,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import template.framework.test.api.CatFactsApi;
-import template.framework.test.api.model.response.CatFactResponse;
+import template.framework.test.model.response.CatFactResponse;
 import template.framework.test.config.PropertyReader;
 import template.framework.test.config.RetryAnalyzer;
 
@@ -48,6 +48,4 @@ public class MainTests {
                 System.getProperty("user.dir") + "/build/allure-results/"
         );
     }
-
-
 }

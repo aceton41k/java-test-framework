@@ -15,6 +15,10 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.json:json:20230618'
+    testImplementation 'org.awaitility:awaitility:4.2.0'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.4'
+    implementation 'com.codeborne:selenide-testng:6.17.1'
     implementation 'io.rest-assured:rest-assured:5.3.0'
     implementation 'org.testng:testng:7.7.0'
     implementation 'io.qameta.allure:allure-testng:2.22.0'
@@ -27,17 +31,20 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
     implementation 'org.slf4j:slf4j-api:2.0.4'
     implementation 'ch.qos.logback:logback-core:1.4.5'
-    runtimeOnly 'ch.qos.logback:logback-classic:1.4.5'
+//    runtimeOnly 'ch.qos.logback:logback-classic:1.4.5'
     implementation 'com.sun.mail:javax.mail:1.6.2'
     runtimeOnly 'org.aspectj:aspectjweaver:1.9.9.1'
     implementation 'com.talanlabs:avatar-generator-cat:1.1.0'
     implementation 'com.github.automatedowl:allure-environment-writer:1.0.0'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'org.aeonbits.owner:owner:1.0.12'
-    implementation 'org.springframework.boot:spring-boot-starter-websocket:3.0.5'
+    implementation('org.springframework.boot:spring-boot-starter-websocket:3.0.5') {
+        exclude group: 'org.slf4j', module: 'jul-to-slf4j'
+        exclude(group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j')
+    }
 
-    compileJava {options.encoding = "UTF-8"}
-    compileTestJava {options.encoding = "UTF-8"}
+    compileJava { options.encoding = "UTF-8" }
+    compileTestJava { options.encoding = "UTF-8" }
 }
 
 test {

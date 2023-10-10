@@ -1,4 +1,4 @@
-package template.framework.test.api.model.response;
+package template.framework.test.model.response;
 
 import lombok.Getter;
 
