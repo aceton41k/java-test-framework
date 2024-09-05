@@ -10,9 +10,11 @@ import template.framework.config.PropertyReader;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class BaseApiTest {
-    DSLContext dsl = null;
+    static DSLContext dsl = null;
+    private static Connection connection;
 
     @BeforeClass
     public void setUp() {
@@ -21,7 +23,7 @@ public class BaseApiTest {
         String password = "appuser123$";
 
         try {
-            Connection connection = DriverManager.getConnection(url, user, password);
+            connection = DriverManager.getConnection(url, user, password);
             dsl = DSL.using(connection);
 
         } catch (Exception e) {
@@ -30,7 +32,10 @@ public class BaseApiTest {
     }
 
     @AfterClass
-    public void afterClass() {
+    public void afterClass() throws SQLException {
+
+        connection.close();
+
         AllureEnvironmentWriter.allureEnvironmentWriter(
                 ImmutableMap.<String, String>builder()
                         .put("Версия бекенда", "10.5.6.7")
