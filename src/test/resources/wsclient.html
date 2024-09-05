@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STOMP Messaging Example</title>
+</head>
+<body>
+<h2>STOMP Messaging</h2>
+
+<!-- Поле ввода имени пользователя -->
+<div>
+    <label for="username">Имя пользователя:</label>
+    <input type="text" id="username" placeholder="Введите ваше имя">
+</div>
+
+<!-- Поле ввода URL сервера -->
+<div>
+    <label for="serverUrl">URL сервера:</label>
+    <input type="text" id="serverUrl" placeholder="Введите URL сервера">
+</div>
+
+<!-- Кнопка для подключения к серверу -->
+<div>
+    <button id="connectBtn">Подключиться</button>
+</div>
+
+<!-- Окно для отправки сообщений, появляется после подключения -->
+<div id="messageForm" style="display:none;">
+    <label for="message">Сообщение:</label>
+    <input type="text" id="message" placeholder="Введите ваше сообщение">
+    <button id="sendBtn">Отправить</button>
+</div>
+
+<!-- Поле для логирования сообщений -->
+<div>
+    <h3>Лог сообщений:</h3>
+    <div id="log"></div>
+</div>
+
+<!-- Подключение библиотеки STOMP -->
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script>
+    let stompClient = null;
+
+    document.getElementById('connectBtn').addEventListener('click', function() {
+        const username = document.getElementById('username').value;
+        const serverUrl = document.getElementById('serverUrl').value;
+
+        if (username && serverUrl) {
+            const socket = new WebSocket(serverUrl);
+            stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function(frame) {
+                console.log('Connected: ' + frame);
+                document.getElementById('messageForm').style.display = 'block';
+            }, function(error) {
+                console.error('Connection error:', error);
+            });
+        } else {
+            alert('Пожалуйста, введите имя пользователя и URL сервера.');
+        }
+    });
+
+    document.getElementById('sendBtn').addEventListener('click', function() {
+        const username = document.getElementById('username').value;
+        const message = document.getElementById('message').value;
+
+        if (stompClient && message) {
+            const messageObject = {
+                username: username,
+                message: message
+            };
+            stompClient.send('/app/chat', {}, JSON.stringify(messageObject));
+
+            // Логируем отправленное сообщение
+            const logDiv = document.getElementById('log');
+            logDiv.innerHTML += `<p><strong>${username}:</strong> ${message}</p>`;
+        } else {
+            alert('Пожалуйста, введите сообщение.');
+        }
+    });
+</script>
+</body>
+</html>

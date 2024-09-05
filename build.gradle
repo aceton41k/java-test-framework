@@ -1,14 +1,17 @@
+import nu.studer.gradle.jooq.JooqEdition
+import org.jooq.meta.jaxb.Logging
+
 plugins {
     id 'java'
     id 'com.adarshr.test-logger' version '3.2.0'
     id "io.qameta.allure" version "2.11.2"
+    id 'nu.studer.jooq' version '9.0'
 }
 group 'test.framework'
 version '1.0'
 
 repositories {
     mavenCentral()
-    jcenter()
     maven {
         url "https://plugins.gradle.org/m2/"
     }
@@ -21,30 +24,95 @@ dependencies {
     implementation 'com.codeborne:selenide-testng:6.17.1'
     implementation 'io.rest-assured:rest-assured:5.3.0'
     implementation 'org.testng:testng:7.7.0'
+    implementation 'org.jooq:jooq:3.19.11'
+    jooqGenerator 'org.postgresql:postgresql:42.7.3'
+    jooqGenerator 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
+    jooqGenerator 'org.glassfish.jaxb:jaxb-runtime:3.0.1'
+    testImplementation 'org.postgresql:postgresql:42.7.3'
     implementation 'io.qameta.allure:allure-testng:2.22.0'
     implementation 'io.qameta.allure:allure-java-commons:2.22.0'
     implementation 'io.qameta.allure:allure-rest-assured:2.22.0'
-    implementation 'org.projectlombok:lombok:1.18.24'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    implementation 'net.datafaker:datafaker:2.3.1'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+    testImplementation 'org.projectlombok:lombok:1.18.34'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.14.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
     implementation 'org.slf4j:slf4j-api:2.0.4'
-    implementation 'ch.qos.logback:logback-core:1.4.5'
-//    runtimeOnly 'ch.qos.logback:logback-classic:1.4.5'
     implementation 'com.sun.mail:javax.mail:1.6.2'
     runtimeOnly 'org.aspectj:aspectjweaver:1.9.9.1'
     implementation 'com.talanlabs:avatar-generator-cat:1.1.0'
     implementation 'com.github.automatedowl:allure-environment-writer:1.0.0'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'org.aeonbits.owner:owner:1.0.12'
-    implementation('org.springframework.boot:spring-boot-starter-websocket:3.0.5') {
+    implementation('org.springframework.boot:spring-boot-starter-websocket:3.3.2') {
         exclude group: 'org.slf4j', module: 'jul-to-slf4j'
         exclude(group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j')
     }
+}
 
-    compileJava { options.encoding = "UTF-8" }
-    compileTestJava { options.encoding = "UTF-8" }
+jooq {
+    version = '3.19.11'  // default (can be omitted)
+    edition = JooqEdition.OSS  // default (can be omitted)
+
+    configurations {
+        main {  // name of the jOOQ configuration
+            generateSchemaSourceOnCompilation = true  // default (can be omitted)
+
+            generationTool {
+                logging = Logging.WARN
+                jdbc {
+                    driver = 'org.postgresql.Driver'
+                    url = 'jdbc:postgresql://localhost:5432/appdb'
+                    user = 'appuser'
+                    password = 'appuser123$'
+                    properties {
+                        property {
+                            key = 'ssl'
+                            value = 'false'
+                        }
+                    }
+                }
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+                    database {
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        inputSchema = 'public'
+                        forcedTypes {
+                            forcedType {
+                                name = 'varchar'
+                                includeExpression = '.*'
+                                includeTypes = 'JSONB?'
+                            }
+                            forcedType {
+                                name = 'varchar'
+                                includeExpression = '.*'
+                                includeTypes = 'INET'
+                            }
+                        }
+                    }
+                    generate {
+                        deprecated = false
+                        records = true
+                        immutablePojos = true
+                        fluentSetters = true
+                    }
+                    target {
+                        packageName = 'jooq'
+                        directory = '/src/test/generated'  // default (can be omitted)
+                    }
+                    strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+                }
+            }
+        }
+    }
+}
+
+sourceSets {
+    test {
+        java {
+            srcDirs 'src/test/generated'
+        }
+    }
 }
 
 test {
@@ -62,12 +130,4 @@ test {
 
 allure {
     version = '2.22.0'
-    adapter {
-        aspectjWeaver.set(true)
-        frameworks {
-            testng {
-                enabled.set(true)
-            }
-        }
-    }
 }
