@@ -2,7 +2,9 @@ package template.framework.api.test;
 
 import jooq.tables.Posts;
 import org.testng.annotations.*;
+import template.framework.api.client.AuthApiClient;
 import template.framework.api.client.PostApiClient;
+import template.framework.config.DataBaseOperations;
 import template.framework.config.PostGenerator;
 import template.framework.api.model.Post;
 
@@ -12,73 +14,65 @@ import static org.testng.Assert.assertNotNull;
 
 public class AppTests extends BaseApiTest {
 
-    PostApiClient api;
-    int insertedPostId;
-    Post post;
+    PostApiClient postApi;
+    DataBaseOperations dbo;
 
 
     @BeforeClass
     public void beforeClass() {
-        api = new PostApiClient();
-
-        post = PostGenerator.generate();
-        dsl.insertInto(Posts.POSTS).columns(Posts.POSTS.TITLE, Posts.POSTS.MESSAGE, Posts.POSTS.DATE)
-                .values(post.getTitle(), post.getMessage(), post.getDate()).execute();
-
-        insertedPostId = dsl.select(Posts.POSTS.ID).from(Posts.POSTS).where(Posts.POSTS.TITLE.eq(post.getTitle())).fetchOne().get(Posts.POSTS.ID);
+        dbo = new DataBaseOperations(dsl);
+        postApi = new PostApiClient();
+        AuthApiClient authApi = new AuthApiClient();
+        authApi.authDefault();
     }
-
 
 
     @Test(description = "Get post")
     public void getPostTest() {
-
-        Post response = api.getPost(insertedPostId);
-        assertEquals(response.getId(), insertedPostId);
-        assertEquals(response.getMessage(), post.getMessage());
-        assertEquals(response.getTitle(), post.getTitle());
+        Post post = PostGenerator.generate();
+        int insertedPostId = dbo.insertPost(post);
+        Post response = postApi.getPost(insertedPostId);
+        assertEquals(response.getId(), insertedPostId, "id from response isn't equal to db's");
+        assertEquals(response.getMessage(), post.getMessage(), "message from response isn't equal to db's");
+        assertEquals(response.getTitle(), post.getTitle(), "title from response isn't equal to db's");
     }
 
     @Test(description = "Create post")
     public void createPost() {
         var post = PostGenerator.generate();
-        Post response = api.createPost(post);
+        Post response = postApi.createPost(post);
         assertNotNull(response.getId());
-        assertEquals(response.getMessage(), post.getMessage());
+        assertEquals(response.getMessage(), post.getMessage(), "message from response isn't equal to generated");
         assertEquals(response.getTitle(), post.getTitle());
-        assertEquals(response.getDate(), post.getDate());
         int createdPostId = response.getId();
 
-        var createdPost = api.getPost(createdPostId);
-        assertEquals(createdPost.getMessage(), post.getMessage());
-        assertEquals(createdPost.getTitle(), post.getTitle());
-        assertEquals(createdPost.getDate(), post.getDate());
-
-        var messageFromDb = dsl.selectFrom(Posts.POSTS)
-                .where(Posts.POSTS.MESSAGE.eq(post.getMessage())).fetchOne().getValue(Posts.POSTS.MESSAGE);
-        assertEquals(post.getMessage(), messageFromDb);
+        var postRecord = dbo.getPost(createdPostId);
+        assertEquals(response.getId(), postRecord.getId(), "id from response isn't equal to db's");
+        assertEquals(post.getTitle(), postRecord.getTitle(), "title from response isn't equal to db's");
+        assertEquals(post.getMessage(), postRecord.getMessage(), "message from response isn't equal to db's");
     }
 
     @Test(description = "Update post")
     public void updatePost() {
+        int insertedPostId = dbo.insertPost(PostGenerator.generate());
         var updatedPost = PostGenerator.generate();
-        var response = api.updatePost(insertedPostId, updatedPost);
-        assertEquals(response.getMessage(), updatedPost.getMessage());
-        assertEquals(response.getTitle(), updatedPost.getTitle());
-        assertEquals(response.getDate(), updatedPost.getDate());
+        var response = postApi.updatePost(insertedPostId, updatedPost);
+        assertEquals(response.getMessage(), updatedPost.getMessage(), "message from response is not equal to updated");
+        assertEquals(response.getTitle(), updatedPost.getTitle(), "title from response is not equal to updated");
 
-        var updatedMessageFromDb = dsl.selectFrom(Posts.POSTS)
-                .where(Posts.POSTS.ID.eq(insertedPostId)).fetchOne().getValue(Posts.POSTS.MESSAGE);
-        assertEquals(updatedPost.getMessage(), updatedMessageFromDb);
+        var postRecord = dbo.getPost(insertedPostId);
+        assertEquals(response.getId(), postRecord.getId(), "id from response is not equal to db's");
+        assertEquals(response.getTitle(), postRecord.getTitle(), "title from response is not equal to db's");
+        assertEquals(response.getMessage(), postRecord.getMessage(), "message from response is not equal to db's");
     }
 
     @Test(description = "Delete post")
     public void deletePost() {
-        var response = api.deletePost(insertedPostId);
+        int insertedPostId = dbo.insertPost(PostGenerator.generate());
+        var response = postApi.deletePost(insertedPostId);
         assertEquals(response.statusCode(), 204);
+
+        //todo check post deleted from db
     }
 
-    @AfterClass
-    public void afterClass() {
-    }
 }

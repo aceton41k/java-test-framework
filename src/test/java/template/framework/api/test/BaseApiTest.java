@@ -38,8 +38,8 @@ public class BaseApiTest {
 
         AllureEnvironmentWriter.allureEnvironmentWriter(
                 ImmutableMap.<String, String>builder()
-                        .put("Версия бекенда", "10.5.6.7")
-                        .put("Стенд", PropertyReader.getBaseUrl())
+                        .put("Backend version", "10.5.6.7")
+                        .put("Stand", PropertyReader.getBaseUrl())
                         .build(),
                 System.getProperty("user.dir") + "/build/allure-results/"
         );

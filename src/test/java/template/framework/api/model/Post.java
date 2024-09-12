@@ -11,5 +11,6 @@ public class Post {
     private Integer id;
     private String title;
     private String message;
-    private String date;
+    private String createdAt;
+    private String updatedAt;
 }

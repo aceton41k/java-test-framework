@@ -14,9 +14,7 @@ public class PostGenerator {
     public static Post generate() {
         var title = faker.text().text();
         var message = faker.text().text();
-        String date = faker.timeAndDate().past(10, TimeUnit.DAYS).toString();
         return new Post()
-                .withDate(date)
                 .withTitle(title)
                 .withMessage(message);
     }

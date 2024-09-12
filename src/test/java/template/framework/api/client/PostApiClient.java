@@ -8,15 +8,11 @@ import static io.restassured.RestAssured.given;
 
 public class PostApiClient extends AbstractApiClient {
 
-    @Override
-    String getBaseUrl() {
-        return "http://localhost:8080/api";
-    }
 
     public Post getPost(int id) {
         httpResponse = given().spec(reqSpec)
                 .contentType(ContentType.JSON)
-                .get("/posts/{id}", id);
+                .get("/api/posts/{id}", id);
         return httpResponse.as(Post.class);
 
     }
@@ -25,13 +21,13 @@ public class PostApiClient extends AbstractApiClient {
         httpResponse = given().spec(reqSpec)
                 .contentType(ContentType.JSON)
                 .body(post)
-                .post("/posts");
+                .post("/api/posts");
         return httpResponse.as(Post.class);
     }
 
     public Response deletePost(int id) {
         return given().spec(reqSpec)
-                .delete("/posts/{id}", id);
+                .delete("/api/posts/{id}", id);
     }
 
     public Post updatePost(int id, Post post) {
@@ -39,7 +35,7 @@ public class PostApiClient extends AbstractApiClient {
                 .spec(reqSpec)
                 .contentType(ContentType.JSON)
                 .body(post)
-                .put("/posts/{id}", id)
+                .put("/api/posts/{id}", id)
                 .as(Post.class);
     }
 }

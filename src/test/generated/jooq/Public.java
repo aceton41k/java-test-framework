@@ -7,9 +7,13 @@ package jooq;
 import java.util.Arrays;
 import java.util.List;
 
+import jooq.tables.Comments;
 import jooq.tables.Posts;
+import jooq.tables.Roles;
+import jooq.tables.Users;
 
 import org.jooq.Catalog;
+import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
@@ -28,9 +32,24 @@ public class Public extends SchemaImpl {
     public static final Public PUBLIC = new Public();
 
     /**
+     * The table <code>public.comments</code>.
+     */
+    public final Comments COMMENTS = Comments.COMMENTS;
+
+    /**
      * The table <code>public.posts</code>.
      */
     public final Posts POSTS = Posts.POSTS;
+
+    /**
+     * The table <code>public.roles</code>.
+     */
+    public final Roles ROLES = Roles.ROLES;
+
+    /**
+     * The table <code>public.users</code>.
+     */
+    public final Users USERS = Users.USERS;
 
     /**
      * No further instances allowed
@@ -46,9 +65,19 @@ public class Public extends SchemaImpl {
     }
 
     @Override
+    public final List<Sequence<?>> getSequences() {
+        return Arrays.asList(
+            Sequences.USERS_SEQ
+        );
+    }
+
+    @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
-            Posts.POSTS
+            Comments.COMMENTS,
+            Posts.POSTS,
+            Roles.ROLES,
+            Users.USERS
         );
     }
 }

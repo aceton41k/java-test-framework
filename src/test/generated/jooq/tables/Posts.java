@@ -4,18 +4,24 @@
 package jooq.tables;
 
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import jooq.Keys;
 import jooq.Public;
+import jooq.tables.Comments.CommentsPath;
 import jooq.tables.records.PostsRecord;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.InverseForeignKey;
 import org.jooq.Name;
+import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
+import org.jooq.Record;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -66,9 +72,14 @@ public class Posts extends TableImpl<PostsRecord> {
     public final TableField<PostsRecord, String> MESSAGE = createField(DSL.name("message"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
-     * The column <code>public.posts.date</code>.
+     * The column <code>public.posts.created_at</code>.
      */
-    public final TableField<PostsRecord, String> DATE = createField(DSL.name("date"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<PostsRecord, LocalDateTime> CREATED_AT = createField(DSL.name("created_at"), SQLDataType.LOCALDATETIME(6), this, "");
+
+    /**
+     * The column <code>public.posts.updated_at</code>.
+     */
+    public final TableField<PostsRecord, LocalDateTime> UPDATED_AT = createField(DSL.name("updated_at"), SQLDataType.LOCALDATETIME(6), this, "");
 
     private Posts(Name alias, Table<PostsRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
@@ -99,6 +110,39 @@ public class Posts extends TableImpl<PostsRecord> {
         this(DSL.name("posts"), null);
     }
 
+    public <O extends Record> Posts(Table<O> path, ForeignKey<O, PostsRecord> childPath, InverseForeignKey<O, PostsRecord> parentPath) {
+        super(path, childPath, parentPath, POSTS);
+    }
+
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class PostsPath extends Posts implements Path<PostsRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> PostsPath(Table<O> path, ForeignKey<O, PostsRecord> childPath, InverseForeignKey<O, PostsRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private PostsPath(Name alias, Table<PostsRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public PostsPath as(String alias) {
+            return new PostsPath(DSL.name(alias), this);
+        }
+
+        @Override
+        public PostsPath as(Name alias) {
+            return new PostsPath(alias, this);
+        }
+
+        @Override
+        public PostsPath as(Table<?> alias) {
+            return new PostsPath(alias.getQualifiedName(), this);
+        }
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
@@ -112,6 +156,19 @@ public class Posts extends TableImpl<PostsRecord> {
     @Override
     public UniqueKey<PostsRecord> getPrimaryKey() {
         return Keys.POSTS_PK;
+    }
+
+    private transient CommentsPath _comments;
+
+    /**
+     * Get the implicit to-many join path to the <code>public.comments</code>
+     * table
+     */
+    public CommentsPath comments() {
+        if (_comments == null)
+            _comments = new CommentsPath(this, null, Keys.COMMENTS__FKH4C7LVSC298WHOYD4W9TA25CR.getInverseKey());
+
+        return _comments;
     }
 
     @Override
