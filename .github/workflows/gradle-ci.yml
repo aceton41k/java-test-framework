@@ -73,11 +73,13 @@ jobs:
         with:
           path: tests
 
-      - name: Setup jdk & compile test classes
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Compile test classes
         run: |
           cd tests
           ./gradlew compileTestJava -PskipJooqGeneration
