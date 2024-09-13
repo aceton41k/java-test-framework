@@ -17,37 +17,27 @@ jobs:
           repository: aceton41k/spring-boot-app
           path: app
 
-      - name: Build Spring Boot Docker image
-        run: |
-          docker build -t spring-boot-app:latest ./app
-
-      - name: Create Docker network
-        run: docker network create my-network
-
-      - name: Run Spring Boot app container
-        run: |
-          docker run -d -p 8080:8080 \
-          --name spring-boot-app \
-          --network my-network \
-          --env SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/appdb \
-          --env SPRING_DATASOURCE_USERNAME=appuser \
-          --env SPRING_DATASOURCE_PASSWORD=appuser123$ \
-          spring-boot-app:latest
-
-      - name: Run PostgreSQL container
-        run: |
-          docker run -d --name db \
-            --network my-network \
-            -e POSTGRES_USER=appuser \
-            -e POSTGRES_PASSWORD=appuser123$ \
-            -e POSTGRES_DB=appdb \
-            -p 5432:5432 \
-            postgres:latest
-
       - name: Checkout API tests
         uses: actions/checkout@v3
         with:
           path: tests
+
+      - name: Set up Docker Compose
+        run: |
+          sudo apt-get install docker-compose
+
+      - name: Build and start containers
+        run: |
+          cd app
+          docker-compose up -d --build
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          docker-compose exec -T db sh -c 'until pg_isready -U appuser -d appdb; do sleep 1; done'
+
+      - name: Wait for Spring Boot app to be ready
+        run: |
+          docker-compose exec -T spring-boot-app sh -c 'until curl --fail http://localhost:8080/actuator/health; do sleep 1; done'
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -59,3 +49,8 @@ jobs:
         run: |
           cd tests
           ./gradlew test --tests template.framework.api.test.AppTests -PskipJooqGeneration -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=appuser123$ -Ddb.user=appuser --info
+
+      - name: Stop and remove containers
+        run: |
+          cd app
+          docker-compose down
