@@ -45,11 +45,11 @@ jobs:
       - name: Run Spring Boot app container
         run: |
           docker run -d -p 8080:8080 \
-            --name app-container \
+            --name spring-boot-app \
             --env SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/appdb \
             --env SPRING_DATASOURCE_USERNAME=appuser \
             --env SPRING_DATASOURCE_PASSWORD=appuser123$ \
-            your-docker-image-name:latest
+            spring-boot-app:latest
           
       - name: Wait for app to be ready
         run: |
