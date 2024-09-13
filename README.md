@@ -3,17 +3,14 @@
 
 ## Features:
 * properties
-* load test class
-* stomp client
-* mail reader
-* avatar generator
+* db checks
 
 ### libs:
 * rest-assured
 * testng
+* jooq
 * allure
-* spring-websocket
   
-```gradle clean test```
+```./gradlew test```
 
-[![Java CI with Gradle](https://github.com/aceton41k/test-framework-template/actions/workflows/gradle.yml/badge.svg)](https://github.com/aceton41k/test-framework-template/actions/workflows/gradle.yml)
+[![Spring Boot API tests](https://github.com/aceton41k/test-framework-template/actions/workflows/gradle-ci.yml/badge.svg)](https://github.com/aceton41k/test-framework-template/actions/workflows/gradle-ci.yml)
