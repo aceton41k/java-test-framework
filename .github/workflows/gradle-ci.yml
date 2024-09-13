@@ -48,4 +48,4 @@ jobs:
       - name: Run API tests
         run: |
           cd tests
-          ./gradlew test --tests template.framework.api.test.AppTests -PskipJooqGeneration -Dapi.url=http://spring-boot-app:8080 -Ddb.url=jdbc:postgresql://db:5432/appdb -Ddb.password=appuser123$ -Ddb.user=appuser --info
+          ./gradlew test --tests template.framework.api.test.AppTests -PskipJooqGeneration -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://db:5432/appdb -Ddb.password=appuser123$ -Ddb.user=appuser --info
