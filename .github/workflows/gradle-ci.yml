@@ -32,7 +32,7 @@ jobs:
       - name: Checkout Spring Boot app repository
         uses: actions/checkout@v3
         with:
-          repository: https://github.com/aceton41k/spring-boot-app.git
+          repository: aceton41k/spring-boot-app
           path: app
 
       - name: Set up Docker Buildx
