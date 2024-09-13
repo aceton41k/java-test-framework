@@ -23,7 +23,8 @@ public class AppTests extends BaseApiTest {
         dbo = new DataBaseOperations(dsl);
         postApi = new PostApiClient();
         AuthApiClient authApi = new AuthApiClient();
-        authApi.authDefault();
+        var email = authApi.signUpAny();
+        authApi.auth(email, "123456");
     }
 
 

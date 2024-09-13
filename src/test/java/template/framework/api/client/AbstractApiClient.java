@@ -28,7 +28,5 @@ public class AbstractApiClient  {
                         .setRelaxedHTTPSValidation()
                         .build()
                         .log().ifValidationFails();
-
-        System.out.println("\n!!!!!!!!!!! URL FROM API CLIENT: "+ PropertyReader.getBaseUrl());
     }
 }
