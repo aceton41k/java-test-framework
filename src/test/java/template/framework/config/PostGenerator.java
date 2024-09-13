@@ -3,8 +3,6 @@ package template.framework.config;
 import net.datafaker.Faker;
 import template.framework.api.model.Post;
 
-import java.util.concurrent.TimeUnit;
-
 public class PostGenerator {
     static Faker faker;
     static {

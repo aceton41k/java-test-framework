@@ -18,12 +18,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.json:json:20230618'
+    implementation 'org.json:json:20240303'
     testImplementation 'org.awaitility:awaitility:4.2.0'
-    implementation 'org.java-websocket:Java-WebSocket:1.5.4'
-    implementation 'com.codeborne:selenide-testng:6.17.1'
-    implementation 'io.rest-assured:rest-assured:5.3.0'
-    implementation 'org.testng:testng:7.7.0'
+    implementation 'com.codeborne:selenide-testng:7.3.2'
+    implementation 'io.rest-assured:rest-assured:5.4.0'
+    implementation 'org.testng:testng:7.10.2'
     implementation 'org.jooq:jooq:3.19.11'
     jooqGenerator 'org.postgresql:postgresql:42.7.3'
     jooqGenerator 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
@@ -44,10 +43,6 @@ dependencies {
     implementation 'com.github.automatedowl:allure-environment-writer:1.0.0'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'org.aeonbits.owner:owner:1.0.12'
-    implementation('org.springframework.boot:spring-boot-starter-websocket:3.3.2') {
-        exclude group: 'org.slf4j', module: 'jul-to-slf4j'
-        exclude(group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j')
-    }
 }
 
 jooq {

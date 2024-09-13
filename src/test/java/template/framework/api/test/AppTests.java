@@ -1,12 +1,12 @@
 package template.framework.api.test;
 
-import jooq.tables.Posts;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import template.framework.api.client.AuthApiClient;
 import template.framework.api.client.PostApiClient;
+import template.framework.api.model.Post;
 import template.framework.config.DataBaseOperations;
 import template.framework.config.PostGenerator;
-import template.framework.api.model.Post;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;

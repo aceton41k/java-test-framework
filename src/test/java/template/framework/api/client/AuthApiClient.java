@@ -1,10 +1,8 @@
 package template.framework.api.client;
 
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import template.framework.api.model.LoginRequest;
 import template.framework.api.model.LoginResponse;
-import template.framework.api.model.Post;
 import template.framework.config.PropertyReader;
 
 import static io.restassured.RestAssured.given;
