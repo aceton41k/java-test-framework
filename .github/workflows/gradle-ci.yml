@@ -73,13 +73,16 @@ jobs:
         with:
           path: tests
 
-      - name: Set up JDK 17
+      - name: Setup jdk & compile test classes
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
+        run: |
+          cd tests
+          ./gradlew compileTestJava -PskipJooqGeneration
 
-      - name: Run API tests
+      - name: Run tests
         run: |
           cd tests
           ./gradlew test --tests template.framework.api.test.AppTests -PskipJooqGeneration -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=appuser123$ -Ddb.user=appuser --info
