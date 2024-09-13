@@ -39,6 +39,11 @@ jobs:
         with:
           path: tests
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
       - name: Run API tests
         run: |
           cd tests
