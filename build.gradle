@@ -50,7 +50,7 @@ jooq {
     edition = JooqEdition.OSS  // default (can be omitted)
 
     configurations {
-        main {  // name of the jOOQ configuration
+        test {  // name of the jOOQ configuration
             generateSchemaSourceOnCompilation = true  // default (can be omitted)
 
             generationTool {
@@ -93,12 +93,21 @@ jooq {
                     }
                     target {
                         packageName = 'jooq'
-                        directory = '/src/test/generated'  // default (can be omitted)
+                        directory = 'src/test/generated'  // default (can be omitted)
                     }
                     strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
                 }
             }
         }
+    }
+}
+
+// Опция для исключения генерации JOOQ во время тестов
+def skipJooqGeneration = project.hasProperty('skipJooqGeneration')
+
+tasks.named('generateTestJooq') {
+    if (skipJooqGeneration) {
+        enabled = false
     }
 }
 
@@ -125,10 +134,4 @@ test {
 
 allure {
     version = '2.22.0'
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
 }
