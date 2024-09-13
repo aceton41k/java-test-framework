@@ -48,4 +48,4 @@ jobs:
       - name: Run API tests
         run: |
           cd tests
-          ./gradlew test --tests template.framework.api.test.AppTests -PskipJooqGeneration
+          ./gradlew test --tests template.framework.api.test.AppTests -PskipJooqGeneration --info
