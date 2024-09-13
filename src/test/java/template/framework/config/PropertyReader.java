@@ -21,9 +21,11 @@ public class PropertyReader {
         try (InputStream inputStream = new FileInputStream("src/test/resources/test.properties")) {
             properties.load(inputStream);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Couldn't load file test.properties", e.getCause());
         }
-            baseUrl = properties.getProperty("api.url");
+        baseUrl = System.getProperty("api.url", properties.getProperty("api.url", "http://default:8080"));
+
+
     }
 
     private PropertyReader() {

@@ -130,7 +130,11 @@ test {
     }
     useTestNG()
 
+    if (System.getProperty('api.url') != null) {
+        systemProperty 'api.url', System.getProperty('api.url')
+    }
 }
+
 
 allure {
     version = '2.22.0'

@@ -7,7 +7,6 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import lombok.Getter;
-import template.framework.api.ApiAsserts;
 import template.framework.config.PropertyReader;
 
 import java.util.List;
@@ -23,11 +22,13 @@ public class AbstractApiClient  {
 
     public AbstractApiClient() {
         reqSpec = new RequestSpecBuilder()
-                        .setBaseUri("http://localhost:8080")
+                        .setBaseUri(PropertyReader.getBaseUrl())
                         .addHeader("User-Agent", "Autotest-api-client")
                         .addFilters(List.of(new RequestLoggingFilter(), new ResponseLoggingFilter(), new AllureRestAssured()))
                         .setRelaxedHTTPSValidation()
                         .build()
                         .log().ifValidationFails();
+
+        System.out.println("\n!!!!!!!!!!! URL FROM API CLIENT: "+ PropertyReader.getBaseUrl());
     }
 }
