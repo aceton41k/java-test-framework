@@ -14,7 +14,7 @@ jobs:
       - name: Checkout Spring Boot app repository
         uses: actions/checkout@v3
         with:
-          repository: aceton41k/
+          repository: aceton41k/spring-boot-app
           path: app
 
       - name: Build Spring Boot Docker image
