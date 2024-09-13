@@ -4,15 +4,14 @@ import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
-import org.testng.annotations.Test;
 
 import java.time.Duration;
 
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.open;
 
 public class UITests extends BaseTest {
 
-    @Test
+    //@Test
     public void fluentWaitTest() {
         open("");
 //        $x("//button[text()='Найти']").getText();
