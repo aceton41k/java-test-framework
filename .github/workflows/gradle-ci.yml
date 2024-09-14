@@ -35,9 +35,10 @@ jobs:
             -p 5432:5432 \
             postgres:latest
 
-      - name: Check environment variable in PostgreSQL container
-        run: |
-          docker exec db printenv | grep POSTGRES_PASSWORD
+      - name: Print secret for debugging
+        run: echo "POSTGRES_PASSWORD=${{ secrets.DB_USER_PASSWORD }}"
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.DB_USER_PASSWORD }}
 
       - name: Run Spring Boot app container
         run: |
