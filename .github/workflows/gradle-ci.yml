@@ -30,7 +30,7 @@ jobs:
           docker run -d --name db \
             --network my-network \
             -e POSTGRES_USER=appuser \
-            -e POSTGRES_PASSWORD=appuser123$ \
+            -e POSTGRES_PASSWORD=${{ secrets.DB_USER_PASSWORD }} \
             -e POSTGRES_DB=appdb \
             -p 5432:5432 \
             postgres:latest
@@ -42,7 +42,7 @@ jobs:
           --network my-network \
           --env SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/appdb \
           --env SPRING_DATASOURCE_USERNAME=appuser \
-          --env SPRING_DATASOURCE_PASSWORD=appuser123$ \
+          --env SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_USER_PASSWORD }} \
           spring-boot-app:latest
 
       - name: Wait for PostgreSQL to be ready
@@ -88,7 +88,7 @@ jobs:
       - name: Run tests
         run: |
           cd tests
-          ./gradlew test -PskipJooqGeneration -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=appuser123$ -Ddb.user=appuser --info
+          ./gradlew test -PskipJooqGeneration -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=${{ secrets.DB_USER_PASSWORD }} -Ddb.user=appuser --info
 
       - name: Check Allure results
         continue-on-error: true
