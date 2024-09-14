@@ -90,9 +90,10 @@ jobs:
           ./gradlew test --tests template.framework.api.test.AppTests -PskipJooqGeneration -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=appuser123$ -Ddb.user=appuser --info
 
       - name: Check Allure results
+        continue-on-error: true
         run: |
           echo 'allure-results:'
-          ls ./tests/build/allure_results
+          ls ./tests/build/allure-results
           echo 'build dir'
           ls ./tests/build
     
