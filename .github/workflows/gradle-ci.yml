@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout Spring Boot app repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: aceton41k/spring-boot-app
           path: app
@@ -69,12 +69,12 @@ jobs:
           done
 
       - name: Checkout API tests
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: tests
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -90,7 +90,7 @@ jobs:
           ./gradlew test --tests template.framework.api.test.AppTests -PskipJooqGeneration -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=appuser123$ -Ddb.user=appuser --info
 
       - name: Get Allure history
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: always()
         continue-on-error: true
         with:
