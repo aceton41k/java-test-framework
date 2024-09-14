@@ -89,6 +89,13 @@ jobs:
           cd tests
           ./gradlew test --tests template.framework.api.test.AppTests -PskipJooqGeneration -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=appuser123$ -Ddb.user=appuser --info
       
+      - name: Ensure gh-pages branch exists
+        run: |
+          git checkout --orphan gh-pages
+          git reset --hard
+          git commit --allow-empty -m "Initial commit on gh-pages"
+          git push origin gh-pages
+    
       - name: Get Allure history
         uses: actions/checkout@v4
         if: always()
