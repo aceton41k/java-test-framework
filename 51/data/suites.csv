@@ -1,0 +1,5 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Sat Sep 14 17:34:17 GMT 2024","Sat Sep 14 17:34:17 GMT 2024","89","Gradle suite","Gradle test","template.framework.api.test.AppTests","template.framework.api.test.AppTests","getPostTest","Get post",""
+"passed","Sat Sep 14 17:34:16 GMT 2024","Sat Sep 14 17:34:16 GMT 2024","845","Gradle suite","Gradle test","template.framework.api.test.AppTests","template.framework.api.test.AppTests","createPost","Create post",""
+"passed","Sat Sep 14 17:34:17 GMT 2024","Sat Sep 14 17:34:18 GMT 2024","135","Gradle suite","Gradle test","template.framework.api.test.AppTests","template.framework.api.test.AppTests","updatePost","Update post",""
+"passed","Sat Sep 14 17:34:17 GMT 2024","Sat Sep 14 17:34:17 GMT 2024","698","Gradle suite","Gradle test","template.framework.api.test.AppTests","template.framework.api.test.AppTests","deletePost","Delete post",""
