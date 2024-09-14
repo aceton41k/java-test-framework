@@ -94,7 +94,8 @@ jobs:
         run: |
           echo 'allure-results:'
           ls ./tests/build/allure-results
-          echo 'build dir'
+          echo '--'
+          echo 'build dir:'
           ls ./tests/build
     
       - name: Get Allure history
@@ -109,9 +110,15 @@ jobs:
         uses: simple-elf/allure-report-action@v1.9
         with:
           gh_pages: gh-pages
-          allure_results: './tests/build/allure_results'
-          allure_report: './tests/build/allure_report'
+          allure_results: './tests/build/allure-results'
+          allure_report: './tests/build/allure-report'
           # allure_history: allure-history
+
+      - name: Check Allure report
+        continue-on-error: true
+        run: |
+          echo 'allure-report:'
+          ls ./tests/build/allure-report
 
       - name: Deploy Allure report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
