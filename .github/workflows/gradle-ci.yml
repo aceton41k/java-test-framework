@@ -89,6 +89,14 @@ jobs:
           cd tests
           ./gradlew test --tests template.framework.api.test.AppTests -PskipJooqGeneration -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=appuser123$ -Ddb.user=appuser --info
 
+      - name: Get Allure history
+        uses: actions/checkout@v3
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
       - name: Generate Allure report
         uses: simple-elf/allure-report-action@v1.9
         with:
