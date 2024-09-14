@@ -89,6 +89,12 @@ jobs:
           cd tests
           ./gradlew test --tests template.framework.api.test.AppTests -PskipJooqGeneration -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=appuser123$ -Ddb.user=appuser --info
 
+      - name: Debug git state
+        run: |
+          git status
+          git branch -a
+          git log --oneline --graph --all
+      
       - name: Get Allure history
         uses: actions/checkout@v4
         if: always()
