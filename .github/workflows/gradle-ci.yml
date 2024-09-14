@@ -102,8 +102,8 @@ jobs:
         uses: simple-elf/allure-report-action@v1.9
         with:
           gh_pages: gh-pages
-          allure_results: allure_results
-          allure_report: allure_report
+          allure_results: './tests/build/allure_results'
+          allure_report: './tests/build/allure_report'
 
       - name: Deploy Allure report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
