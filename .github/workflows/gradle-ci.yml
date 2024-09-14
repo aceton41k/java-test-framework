@@ -11,62 +11,62 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Spring Boot app repository
-        uses: actions/checkout@v4
-        with:
-          repository: aceton41k/spring-boot-app
-          path: app
+      # - name: Checkout Spring Boot app repository
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: aceton41k/spring-boot-app
+      #     path: app
 
-      - name: Build Spring Boot Docker image
-        run: |
-          docker build -t spring-boot-app:latest ./app
+      # - name: Build Spring Boot Docker image
+      #   run: |
+      #     docker build -t spring-boot-app:latest ./app
 
-      - name: Create Docker network
-        run: docker network create my-network
+      # - name: Create Docker network
+      #   run: docker network create my-network
 
-      - name: Run PostgreSQL container
-        run: |
-          docker run -d --name db \
-            --network my-network \
-            -e POSTGRES_USER=appuser \
-            -e POSTGRES_PASSWORD=appuser123$ \
-            -e POSTGRES_DB=appdb \
-            -p 5432:5432 \
-            postgres:latest
+      # - name: Run PostgreSQL container
+      #   run: |
+      #     docker run -d --name db \
+      #       --network my-network \
+      #       -e POSTGRES_USER=appuser \
+      #       -e POSTGRES_PASSWORD=appuser123$ \
+      #       -e POSTGRES_DB=appdb \
+      #       -p 5432:5432 \
+      #       postgres:latest
 
-      - name: Run Spring Boot app container
-        run: |
-          docker run -d -p 8080:8080 \
-          --name spring-boot-app \
-          --network my-network \
-          --env SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/appdb \
-          --env SPRING_DATASOURCE_USERNAME=appuser \
-          --env SPRING_DATASOURCE_PASSWORD=appuser123$ \
-          spring-boot-app:latest
+      # - name: Run Spring Boot app container
+      #   run: |
+      #     docker run -d -p 8080:8080 \
+      #     --name spring-boot-app \
+      #     --network my-network \
+      #     --env SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/appdb \
+      #     --env SPRING_DATASOURCE_USERNAME=appuser \
+      #     --env SPRING_DATASOURCE_PASSWORD=appuser123$ \
+      #     spring-boot-app:latest
 
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          for i in {1..30}; do
-            if docker exec db pg_isready -U appuser; then
-              echo "PostgreSQL is ready!"
-              break
-            else
-              echo "Waiting for PostgreSQL..."
-              sleep 10
-            fi
-          done
+      # - name: Wait for PostgreSQL to be ready
+      #   run: |
+      #     for i in {1..30}; do
+      #       if docker exec db pg_isready -U appuser; then
+      #         echo "PostgreSQL is ready!"
+      #         break
+      #       else
+      #         echo "Waiting for PostgreSQL..."
+      #         sleep 10
+      #       fi
+      #     done
 
-      - name: Wait for Spring Boot app to be ready
-        run: |
-          for i in {1..30}; do
-            if curl -s http://localhost:8080/actuator/health | grep '"status":"UP"'; then
-              echo "Spring Boot app is ready!"
-              break
-            else
-              echo "Waiting for Spring Boot app..."
-              sleep 10
-            fi
-          done
+      # - name: Wait for Spring Boot app to be ready
+      #   run: |
+      #     for i in {1..30}; do
+      #       if curl -s http://localhost:8080/actuator/health | grep '"status":"UP"'; then
+      #         echo "Spring Boot app is ready!"
+      #         break
+      #       else
+      #         echo "Waiting for Spring Boot app..."
+      #         sleep 10
+      #       fi
+      #     done
 
       - name: Checkout API tests
         uses: actions/checkout@v4
@@ -102,8 +102,8 @@ jobs:
         uses: simple-elf/allure-report-action@v1.9
         with:
           gh_pages: gh-pages
-          allure_results: '/tests/build/allure_results'
-          allure_report: './tests/build/allure_report'
+          allure_results: allure_results
+          allure_report: allure_report
 
       - name: Deploy Allure report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
