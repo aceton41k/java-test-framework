@@ -94,13 +94,13 @@ jobs:
         if: always()
         continue-on-error: true
         with:
-          ref: allure-report
-          path: allure-report
+          ref: gh-pages
+          path: gh-pages
 
-      - name: Generate Allure report
+      - name: Build Allure report
         uses: simple-elf/allure-report-action@v1.9
         with:
-          gh_pages: allure-report
+          gh_pages: gh-pages
           allure_results: './tests/build/allure-results'
           allure_report: './tests/build/allure-report'
 
@@ -108,5 +108,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: allure-report
+          publish_branch: gh-pages
           publish_dir: allure-history
