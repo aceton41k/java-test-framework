@@ -88,13 +88,6 @@ jobs:
         run: |
           cd tests
           ./gradlew test --tests template.framework.api.test.AppTests -PskipJooqGeneration -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=appuser123$ -Ddb.user=appuser --info
-      
-      - name: Ensure gh-pages branch exists
-        run: |
-          git checkout --orphan gh-pages
-          git reset --hard
-          git commit --allow-empty -m "Initial commit on gh-pages"
-          git push origin gh-pages
     
       - name: Get Allure history
         uses: actions/checkout@v4
@@ -108,12 +101,12 @@ jobs:
         uses: simple-elf/allure-report-action@v1.9
         with:
           gh_pages: gh-pages
-          allure_results: './tests/build/allure-results'
-          allure_report: './tests/build/allure-report'
+          allure_results: allure_results
+          allure_report: allure_report
 
       - name: Deploy Allure report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
-        if: github.ref == 'refs/heads/master'
+        if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
