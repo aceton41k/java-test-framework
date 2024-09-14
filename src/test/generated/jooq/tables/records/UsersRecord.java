@@ -4,12 +4,11 @@
 package jooq.tables.records;
 
 
-import java.time.LocalDateTime;
-
 import jooq.tables.Users;
-
 import org.jooq.Record1;
 import org.jooq.impl.UpdatableRecordImpl;
+
+import java.time.LocalDateTime;
 
 
 /**

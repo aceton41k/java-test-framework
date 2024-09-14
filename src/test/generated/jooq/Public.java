@@ -4,18 +4,17 @@
 package jooq;
 
 
-import java.util.Arrays;
-import java.util.List;
-
 import jooq.tables.Comments;
 import jooq.tables.Posts;
 import jooq.tables.Roles;
 import jooq.tables.Users;
-
 import org.jooq.Catalog;
 import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**

@@ -5,7 +5,6 @@ package jooq.tables.records;
 
 
 import jooq.tables.Roles;
-
 import org.jooq.Record1;
 import org.jooq.impl.UpdatableRecordImpl;
 

@@ -22,9 +22,9 @@ file("src/test/resources/test.properties").withInputStream { stream ->
     props.load(stream)
 }
 
-def dbUrl = System.getProperty("db.url", props.getProperty("db.url", "jdbc:postgresql://localhost:5432/appdb"))
-def dbUser = System.getProperty("db.user", props.getProperty("db.user", "appuser"))
-def dbPassword = System.getProperty('db.password', props.getProperty('db.password', "appuser123"))
+def dbUrl = System.getProperty("db.url", props.getProperty("db.url"))
+def dbUser = System.getProperty("db.user", props.getProperty("db.user"))
+def dbPassword = System.getProperty('db.password', props.getProperty('db.password'))
 
 dependencies {
     implementation 'org.json:json:20240303'

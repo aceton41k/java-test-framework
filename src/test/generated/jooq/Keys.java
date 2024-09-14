@@ -12,7 +12,6 @@ import jooq.tables.records.CommentsRecord;
 import jooq.tables.records.PostsRecord;
 import jooq.tables.records.RolesRecord;
 import jooq.tables.records.UsersRecord;
-
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
