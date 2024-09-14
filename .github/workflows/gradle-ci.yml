@@ -100,6 +100,7 @@ jobs:
       - name: Generate Allure report
         uses: simple-elf/allure-report-action@v1.9
         with:
+          gh_pages: gh-pages
           allure_results: './tests/build/allure-results'
           allure_report: './tests/build/allure-report'
 
@@ -107,4 +108,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./tests/build/allure-report
+          publish_branch: gh-pages
+          publish_dir: allure-history
