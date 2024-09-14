@@ -1,4 +1,4 @@
-name: Run Spring Boot app in Docker and API tests
+name: Spring Boot App API tests
 
 on:
   push:
