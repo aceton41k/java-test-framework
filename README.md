@@ -1,4 +1,5 @@
-# Test framework template Java
+# Test framework Java <img src="https://github.com/user-attachments/assets/76235ee8-15a5-41fe-a6e2-b9106a0279a4" width="40"/>
+
 ![pss](https://i.ibb.co/P1d1kZ0/monkey-laptop.gif)
 
 ## Features:
