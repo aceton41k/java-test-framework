@@ -94,7 +94,7 @@ jobs:
       - name: Run tests
         run: |
           cd tests
-          ./gradlew test -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=${{ secrets.DB_USER_PASSWORD }} -Ddb.user=appuser --info
+          ./gradlew test -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=appuser123$ -Ddb.user=appuser --info
     
       - name: Check if tests were run
         id: check-test-results
