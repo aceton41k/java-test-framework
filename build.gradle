@@ -4,7 +4,7 @@ import org.jooq.meta.jaxb.Logging
 plugins {
     id 'java'
     id 'com.adarshr.test-logger' version '3.2.0'
-    id "io.qameta.allure" version "2.11.2"
+    id "io.qameta.allure" version "2.12.0"
     id 'nu.studer.jooq' version '9.0'
 }
 group 'test.framework'
@@ -53,6 +53,7 @@ dependencies {
     implementation 'com.github.automatedowl:allure-environment-writer:1.0.0'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'org.aeonbits.owner:owner:1.0.12'
+    allureRawResultElements(files("$buildDir/custom-allure-results"))
 }
 
 jooq {
@@ -152,5 +153,5 @@ test {
 
 
 allure {
-    version = '2.22.0'
+    version = '2.30.0'
 }
