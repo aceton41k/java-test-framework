@@ -96,10 +96,6 @@ jobs:
       - name: Check if tests were run
         id: check-test-results
         run: |
-          echo 'allure-results:'
-          ls -la ./tests/build/allure-results
-          echo 'tests dir:'
-          ls -la ./tests
           if [ -d "./tests/build/allure-results" ] && [ "$(ls -A ./tests/build/allure-results)" ]; then
             if ls ./tests/build/allure-results/*container.json 1> /dev/null 2>&1; then
               echo "At least one *container.json file is present."
@@ -125,7 +121,6 @@ jobs:
         with:
           gh_pages: gh-pages
           allure_results: './tests/build/allure-results'
-#          allure_report: './tests/build/allure-report'
           allure_history: allure-history
 
       - name: Deploy Allure report to GitHub Pages

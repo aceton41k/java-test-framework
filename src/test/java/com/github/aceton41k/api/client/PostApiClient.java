@@ -17,6 +17,13 @@ public class PostApiClient extends BaseApiClient {
                 .get("/api/posts/{id}", id);
     }
 
+    @Step("Get posts")
+    public Response getPosts() {
+        return given().spec(reqSpec)
+                .contentType(ContentType.JSON)
+                .get("/api/posts");
+    }
+
     @Step("Create post")
     public Response createPost(Post post) {
         return given().spec(reqSpec)

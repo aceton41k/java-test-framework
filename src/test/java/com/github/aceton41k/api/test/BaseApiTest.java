@@ -24,8 +24,6 @@ public class BaseApiTest extends ApiAsserts {
         String dbUrl = Objects.requireNonNull(System.getProperty("db.url"));
         String dbUser = PropertyReader.getDbUser();
         String dbPassword = PropertyReader.getDbPassword();
-        System.out.println("! ! ! ! !DB URL : "+dbUrl);
-        System.out.println("! ! ! ! !DB PASSWORD : "+dbPassword);
 
         try {
             connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
