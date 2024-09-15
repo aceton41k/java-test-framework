@@ -8,13 +8,18 @@ import com.github.aceton41k.api.model.UserResponse;
 import com.github.aceton41k.config.DataBaseOperations;
 import com.github.aceton41k.config.PostGenerator;
 import io.qameta.allure.Severity;
-import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.testng.Tag;
+import io.restassured.common.mapper.TypeRef;
 import net.datafaker.Faker;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import java.util.List;
+
+import static io.qameta.allure.SeverityLevel.*;
+import static io.restassured.http.Method.DELETE;
+import static io.restassured.http.Method.GET;
+import static org.testng.Assert.*;
 
 
 public class AppTests extends BaseApiTest {
@@ -25,7 +30,7 @@ public class AppTests extends BaseApiTest {
     Faker faker = new Faker();
     String email = faker.internet().emailAddress();
     String fullName = faker.name().fullName();
-    String password = faker.internet().password(5 ,5);
+    String password = faker.internet().password(5, 5);
 
 
     @BeforeClass
@@ -41,7 +46,7 @@ public class AppTests extends BaseApiTest {
     }
 
     @Test(description = "Get post")
-    @Severity(SeverityLevel.BLOCKER)
+    @Severity(BLOCKER)
     public void getPost() {
         Post post = PostGenerator.generate();
         int insertedPostId = dbo.insertPost(post);
@@ -55,7 +60,7 @@ public class AppTests extends BaseApiTest {
     }
 
     @Test(description = "Create post")
-    @Severity(SeverityLevel.BLOCKER)
+    @Severity(BLOCKER)
     public void createPost() {
         var post = PostGenerator.generate();
         var response = postApi.createPost(post);
@@ -75,7 +80,7 @@ public class AppTests extends BaseApiTest {
     }
 
     @Test(description = "Update post")
-    @Severity(SeverityLevel.BLOCKER)
+    @Severity(BLOCKER)
     public void updatePost() {
         int insertedPostId = dbo.insertPost(PostGenerator.generate());
         var updatedPost = PostGenerator.generate();
@@ -92,7 +97,7 @@ public class AppTests extends BaseApiTest {
     }
 
     @Test(description = "Delete post")
-    @Severity(SeverityLevel.BLOCKER)
+    @Severity(BLOCKER)
     public void deletePost() {
         int insertedPostId = dbo.insertPost(PostGenerator.generate());
         var response = postApi.deletePost(insertedPostId);
@@ -101,21 +106,38 @@ public class AppTests extends BaseApiTest {
     }
 
     @Test(description = "Delete post not exists", groups = {"negative"})
-    @Severity(SeverityLevel.MINOR)
+    @Severity(MINOR)
     public void deletePostNotExist() {
         var response = postApi.deletePost(999999);
         assertStatusCodeNotFound(response);
     }
 
+    @Test(description = "Get posts")
+    @Severity(BLOCKER)
+    public void getPosts() {
+        var post1 = PostGenerator.generate();
+        var post2 = PostGenerator.generate();
+        dbo.insertPost(post1);
+        dbo.insertPost(post2);
+
+        var response = postApi.getPosts();
+
+        assertStatusCodeOk(response);
+        List<Post> posts = response.as(new TypeRef<>() {
+        });
+        assertTrue(posts.size() >= 2);
+
+    }
+
     @Test(description = "Get post not exists", groups = {"negative"})
-    @Severity(SeverityLevel.MINOR)
+    @Severity(MINOR)
     public void getPostNotExist() {
         var response = postApi.getPost(999999);
         assertStatusCodeNotFound(response);
     }
 
     @Test(description = "Update post not exists", groups = {"negative"})
-    @Severity(SeverityLevel.MINOR)
+    @Severity(MINOR)
     public void updatePostNotExist() {
         var post = PostGenerator.generate();
         var response = postApi.updatePost(999999, post);
@@ -123,14 +145,14 @@ public class AppTests extends BaseApiTest {
     }
 
     @Test(description = "Get method that throws exception", groups = {"negative"})
-    @Severity(SeverityLevel.TRIVIAL)
+    @Severity(TRIVIAL)
     public void getExceptionRequest() {
         var response = postApi.exception();
         assertInternalServerError(response);
     }
 
     @Test(description = "User info")
-    @Severity(SeverityLevel.NORMAL)
+    @Severity(NORMAL)
     public void userInfo() {
         var response = userApi.me();
         assertStatusCodeOk(response);
@@ -140,13 +162,21 @@ public class AppTests extends BaseApiTest {
         assertStatusCodeOk(response);
     }
 
-    //todo realize dedicated api client for unauthorized access
-//    @Test(description = "Unauthorized access to get post")
-//    @Severity(SeverityLevel.NORMAL)
-//    public void unauthorizedAccess() {
-//        var postApi = new PostApiClient();
-//        var response = postApi.getPost(1);
-//        assertStatusCodeUnauthorized(response);
-//    }
+    @Test(description = "Unauthorized access to get post",
+            groups = {"security"})
+    @Severity(NORMAL)
+    public void getPostUnauthorized() {
+        var response = postApi.baseRequest("/api/posts", GET);
+        assertStatusCodeUnauthorized(response);
+    }
+
+    @Test(description = "Unauthorized access to delete post",
+            groups = {"negative"})
+    @Severity(CRITICAL)
+    @Tag("negative")
+    public void deletePostUnauthorized() {
+        var response = postApi.baseRequest("/api/posts", DELETE);
+        assertStatusCodeUnauthorized(response);
+    }
 
 }
