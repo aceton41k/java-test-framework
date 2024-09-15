@@ -7,7 +7,6 @@ import com.github.aceton41k.api.model.Post;
 import com.github.aceton41k.api.model.UserResponse;
 import com.github.aceton41k.config.DataBaseOperations;
 import com.github.aceton41k.config.PostGenerator;
-import com.github.aceton41k.config.PropertyReader;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import net.datafaker.Faker;
@@ -26,7 +25,7 @@ public class AppTests extends BaseApiTest {
     Faker faker = new Faker();
     String email = faker.internet().emailAddress();
     String fullName = faker.name().fullName();
-    String password = PropertyReader.getProperties().getProperty("api.user.password");
+    String password = faker.internet().password(5 ,5);
 
 
     @BeforeClass
@@ -38,7 +37,7 @@ public class AppTests extends BaseApiTest {
         userApi = new UserApiClient();
         AuthApiClient authApi = new AuthApiClient();
         authApi.signUp(email, password, fullName);
-        authApi.auth(email);
+        authApi.auth(email, password);
     }
 
     @Test(description = "Get post")
