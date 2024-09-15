@@ -64,7 +64,7 @@ public class AppTests extends BaseApiTest {
     public void createPost() {
         var post = PostGenerator.generate();
         var response = postApi.createPost(post);
-        assertStatusCodeOk(response);
+        assertStatusCreated(response);
         var postResponse = response.as(Post.class);
 
         assertNotNull(postResponse.getId());

@@ -32,4 +32,8 @@ public class ApiAsserts {
         assertStatusCode(response, HttpStatus.SC_OK);
     }
 
+    public void assertStatusCreated(Response response) {
+        assertStatusCode(response, HttpStatus.SC_CREATED);
+    }
+
 }
