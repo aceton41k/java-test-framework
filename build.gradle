@@ -25,6 +25,7 @@ file("src/test/resources/test.properties").withInputStream { stream ->
 def dbUrl = System.getProperty("db.url", props.getProperty("db.url"))
 def dbUser = System.getProperty("db.user", props.getProperty("db.user"))
 def dbPassword = System.getProperty('db.password', props.getProperty('db.password'))
+def apiUrl = System.getProperty('api.url', props.getProperty('api.url'))
 
 dependencies {
     implementation 'org.json:json:20240303'
@@ -47,7 +48,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
     implementation 'org.slf4j:slf4j-api:2.0.4'
     implementation 'com.sun.mail:javax.mail:1.6.2'
-    runtimeOnly 'org.aspectj:aspectjweaver:1.9.9.1'
+    runtimeOnly 'org.aspectj:aspectjweaver:1.9.22.1'
     implementation 'com.talanlabs:avatar-generator-cat:1.1.0'
     implementation 'com.github.automatedowl:allure-environment-writer:1.0.0'
     implementation 'com.google.code.gson:gson:2.10.1'
@@ -141,9 +142,12 @@ test {
     }
     useTestNG()
 
-    if (System.getProperty('api.url') != null) {
-        systemProperty 'api.url', System.getProperty('api.url')
-    }
+    systemProperties = [
+            'db.url': dbUrl,
+            'db.user': dbUser,
+            'db.password': dbPassword,
+            'api.url': apiUrl
+    ]
 }
 
 

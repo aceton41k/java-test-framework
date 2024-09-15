@@ -13,6 +13,7 @@ import org.testng.annotations.BeforeClass;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class BaseApiTest extends ApiAsserts {
     static DSLContext dsl = null;
@@ -20,7 +21,7 @@ public class BaseApiTest extends ApiAsserts {
 
     @BeforeClass
     public void setUp() {
-        String dbUrl = PropertyReader.getDbUrl();
+        String dbUrl = Objects.requireNonNull(System.getProperty("db.url"));
         String user = PropertyReader.getDbUser();
         String password = PropertyReader.getDbPassword();
 
