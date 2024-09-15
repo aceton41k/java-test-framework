@@ -22,11 +22,13 @@ public class BaseApiTest extends ApiAsserts {
     @BeforeClass
     public void setUp() {
         String dbUrl = Objects.requireNonNull(System.getProperty("db.url"));
-        String user = PropertyReader.getDbUser();
-        String password = PropertyReader.getDbPassword();
+        String dbUser = PropertyReader.getDbUser();
+        String dbPassword = PropertyReader.getDbPassword();
+        System.out.println("! ! ! ! !DB URL : "+dbUrl);
+        System.out.println("! ! ! ! !DB PASSWORD : "+dbPassword);
 
         try {
-            connection = DriverManager.getConnection(dbUrl, user, password);
+            connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
             dsl = DSL.using(connection);
 
         } catch (SQLException e) {
