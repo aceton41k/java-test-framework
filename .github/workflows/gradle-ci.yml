@@ -98,6 +98,8 @@ jobs:
         run: |
           echo 'allure-results:'
           ls -la ./tests/build/allure-results
+          echo 'tests dir:'
+          ls -la ./tests
           if [ -d "./tests/build/allure-results" ] && [ "$(ls -A ./tests/build/allure-results)" ]; then
             echo "tests_found=true" >> $GITHUB_ENV
           else
