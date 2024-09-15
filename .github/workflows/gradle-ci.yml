@@ -5,12 +5,12 @@ on:
     branches:
       - master
   pull_request:
-  workflow_dispatch:
     paths-ignore:
       - 'README.md'
+  workflow_dispatch:
 
 jobs:
-  run-tests:
+  run-spring-app:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,12 +35,7 @@ jobs:
             -e POSTGRES_PASSWORD=${{ secrets.DB_USER_PASSWORD }} \
             -e POSTGRES_DB=appdb \
             -p 5432:5432 \
-            postgres:latest
-
-      - name: Print secret for debugging
-        run: echo "POSTGRES_PASSWORD=${{ secrets.DB_USER_PASSWORD }}"
-        env:
-          POSTGRES_PASSWORD: ${{ secrets.DB_USER_PASSWORD }}
+            postgres:16.4-alpine
 
       - name: Run Spring Boot app container
         run: |
@@ -76,6 +71,10 @@ jobs:
             fi
           done
 
+  run-tests:
+    runs-on: ubuntu-latest
+    needs: run-spring-app
+    steps:
       - name: Checkout API tests
         uses: actions/checkout@v4
         with:
@@ -97,6 +96,23 @@ jobs:
           cd tests
           ./gradlew test -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=${{ secrets.DB_USER_PASSWORD }} -Ddb.user=appuser --info
     
+      - name: Check if tests were run
+        id: check-test-results
+        run: |
+          if [ -d "./tests/build/allure-results" ] && [ "$(ls -A ./tests/build/allure-results)" ]; then
+            echo "tests_found=true" >> $GITHUB_ENV
+            echo "::set-output name=tests_found::true"
+          else
+            echo "tests_found=false" >> $GITHUB_ENV
+            echo "::set-output name=tests_found::false"
+          fi
+
+  build-allure-report:
+      runs-on: ubuntu-latest
+      needs: run-tests
+      if: ${{ always() && steps.check-test-results.outputs.tests_found == 'true' }}
+
+      steps:
       - name: Get Allure history
         uses: actions/checkout@v4
         if: always()
@@ -107,6 +123,7 @@ jobs:
 
       - name: Build Allure report
         uses: simple-elf/allure-report-action@v1.9
+        if: ${{ always() && steps.check-test-results.outputs.tests_found == 'true' }}
         with:
           gh_pages: gh-pages
           allure_results: './tests/build/allure-results'
