@@ -2,8 +2,8 @@ name: Spring Boot App API tests
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - 'rc-*'
   pull_request:
     paths-ignore:
       - 'README.md'
