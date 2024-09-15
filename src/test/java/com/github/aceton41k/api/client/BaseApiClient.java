@@ -12,9 +12,9 @@ import lombok.Getter;
 import java.util.List;
 
 
+@Getter
 public class BaseApiClient {
     protected static RequestSpecification reqSpec;
-    @Getter
     protected Response httpResponse;
 
     public BaseApiClient() {

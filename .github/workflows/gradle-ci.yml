@@ -6,6 +6,8 @@ on:
       - master
   pull_request:
   workflow_dispatch:
+    paths-ignore:
+      - 'README.md'
 
 jobs:
   run-tests:
@@ -88,21 +90,12 @@ jobs:
       - name: Compile test classes
         run: |
           cd tests
-          ./gradlew compileTestJava -PskipJooqGeneration
+          ./gradlew compileTestJava
 
       - name: Run tests
         run: |
           cd tests
-          ./gradlew test -PskipJooqGeneration -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=${{ secrets.DB_USER_PASSWORD }} -Ddb.user=appuser --info
-
-      - name: Check Allure results
-        continue-on-error: true
-        run: |
-          echo 'allure-results:'
-          ls ./tests/build/allure-results
-          echo '--'
-          echo 'build dir:'
-          ls ./tests/build
+          ./gradlew test -Dapi.url=http://localhost:8080 -Ddb.url=jdbc:postgresql://localhost:5432/appdb -Ddb.password=${{ secrets.DB_USER_PASSWORD }} -Ddb.user=appuser --info
     
       - name: Get Allure history
         uses: actions/checkout@v4
@@ -118,13 +111,6 @@ jobs:
           gh_pages: gh-pages
           allure_results: './tests/build/allure-results'
           allure_report: './tests/build/allure-report'
-          # allure_history: allure-history
-
-      - name: Check Allure report
-        continue-on-error: true
-        run: |
-          echo 'allure-report:'
-          ls ./tests/build/allure-report
 
       - name: Deploy Allure report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

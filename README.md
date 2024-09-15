@@ -20,3 +20,4 @@ https://aceton41k.github.io/java-test-framework
 
 [![Spring Boot API tests](https://github.com/aceton41k/test-framework-template/actions/workflows/gradle-ci.yml/badge.svg)](https://github.com/aceton41k/test-framework-template/actions/workflows/gradle-ci.yml)
 [![Allure](https://github.com/aceton41k/java-test-framework/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/aceton41k/java-test-framework/actions/workflows/pages/pages-build-deployment)
+[![CodeQL](https://github.com/aceton41k/java-test-framework/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/aceton41k/java-test-framework/actions/workflows/github-code-scanning/codeql)
