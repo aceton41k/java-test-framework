@@ -62,7 +62,7 @@ jooq {
 
     configurations {
         test {  // name of the jOOQ configuration
-            generateSchemaSourceOnCompilation = true  // default (can be omitted)
+            generateSchemaSourceOnCompilation = false  // default (can be omitted)
 
             generationTool {
                 logging = Logging.WARN

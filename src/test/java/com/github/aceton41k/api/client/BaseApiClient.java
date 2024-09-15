@@ -10,16 +10,12 @@ import io.restassured.specification.RequestSpecification;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.Properties;
 
 
 public class BaseApiClient {
     protected static RequestSpecification reqSpec;
     @Getter
     protected Response httpResponse;
-
-    @Getter
-    protected static Properties properties = PropertyReader.getProperties();
 
     public BaseApiClient() {
         reqSpec = new RequestSpecBuilder()

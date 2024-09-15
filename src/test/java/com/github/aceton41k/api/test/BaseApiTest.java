@@ -20,16 +20,16 @@ public class BaseApiTest extends ApiAsserts {
 
     @BeforeClass
     public void setUp() {
-        String url = System.getProperty("db.url", PropertyReader.getProperties().getProperty("db.url"));
-        String user = "appuser";
-        String password = "appuser123$";
+        String dbUrl = PropertyReader.getDbUrl();
+        String user = PropertyReader.getDbUser();
+        String password = PropertyReader.getDbPassword();
 
         try {
-            connection = DriverManager.getConnection(url, user, password);
+            connection = DriverManager.getConnection(dbUrl, user, password);
             dsl = DSL.using(connection);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException("Could not create db connection", e.getCause());
         }
     }
 
