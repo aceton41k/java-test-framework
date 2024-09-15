@@ -96,6 +96,8 @@ jobs:
       - name: Check if tests were run
         id: check-test-results
         run: |
+          echo 'allure-results:'
+          ls -la ./tests/build/allure-results
           if [ -d "./tests/build/allure-results" ] && [ "$(ls -A ./tests/build/allure-results)" ]; then
             echo "tests_found=true" >> $GITHUB_ENV
           else
