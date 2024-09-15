@@ -103,7 +103,6 @@ jobs:
 
       - name: Get Allure history
         uses: actions/checkout@v4
-        if: env.tests_found == 'true'
         continue-on-error: true
         with:
           ref: gh-pages
@@ -117,9 +116,9 @@ jobs:
           allure_report: './tests/build/allure-report'
 
       - name: Deploy Allure report to GitHub Pages
+        if: env.tests_found == 'true'
         uses: peaceiris/actions-gh-pages@v4
-        if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history
+          publish_dir: './tests/build/allure-report'
