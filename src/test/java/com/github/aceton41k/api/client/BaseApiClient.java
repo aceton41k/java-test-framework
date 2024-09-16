@@ -5,6 +5,7 @@ import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.http.Header;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -17,21 +18,29 @@ import static io.restassured.RestAssured.given;
 
 @Getter
 public class BaseApiClient {
-    protected static RequestSpecification reqSpec;
-    protected RequestSpecBuilder reqSpecBuilder = new RequestSpecBuilder()
+
+    /**
+     * Common request which stores and reuse all data in request specification
+     * <p>Useful for authorized requests<p/>
+     */
+    static final Header userAgent = new Header("User-Agent", "Autotest-api-client");
+
+    protected static RequestSpecification reqSpec = new RequestSpecBuilder()
             .setBaseUri(PropertyReader.getBaseUrl())
-            .addHeader("User-Agent", "Autotest-api-client")
+            .addHeader(userAgent.getName(), userAgent.getValue())
             .addFilters(List.of(new RequestLoggingFilter(), new ResponseLoggingFilter(), new AllureRestAssured()))
-            .setRelaxedHTTPSValidation()
-    ;
+            .setRelaxedHTTPSValidation().build();
+
     protected Response httpResponse;
 
-    public BaseApiClient() {
-        reqSpec = reqSpecBuilder.build();
-    }
-
-    public Response baseRequest(String endpoint, Method method) {
-        RequestSpecification reqSpecBase = reqSpecBuilder.build();
-        return given().spec(reqSpecBase).request(method, endpoint);
+    /**
+     * New request with initial RequestSpecification
+     * <p>Useful for customized requests</p>
+     */
+    public Response anonymousRequest(String endpoint, Method method) {
+        return given()
+                .spec(new RequestSpecBuilder()
+                        .addHeader(userAgent.getName(), userAgent.getValue()).build())
+                .request(method, endpoint);
     }
 }

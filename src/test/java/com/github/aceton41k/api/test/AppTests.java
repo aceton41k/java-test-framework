@@ -1,10 +1,12 @@
 package com.github.aceton41k.api.test;
 
+import com.github.aceton41k.api.client.ActuatorApiClient;
 import com.github.aceton41k.api.client.AuthApiClient;
 import com.github.aceton41k.api.client.PostApiClient;
 import com.github.aceton41k.api.client.UserApiClient;
 import com.github.aceton41k.api.model.Post;
 import com.github.aceton41k.api.model.UserResponse;
+import com.github.aceton41k.api.model.actuator.health.HealthResponse;
 import com.github.aceton41k.config.DataBaseOperations;
 import com.github.aceton41k.config.PostGenerator;
 import io.qameta.allure.Severity;
@@ -166,7 +168,7 @@ public class AppTests extends BaseApiTest {
             groups = {"security"})
     @Severity(NORMAL)
     public void getPostUnauthorized() {
-        var response = postApi.baseRequest("/api/posts", GET);
+        var response = postApi.anonymousRequest("/api/posts", GET);
         assertStatusCodeUnauthorized(response);
     }
 
@@ -175,8 +177,19 @@ public class AppTests extends BaseApiTest {
     @Severity(CRITICAL)
     @Tag("negative")
     public void deletePostUnauthorized() {
-        var response = postApi.baseRequest("/api/posts", DELETE);
+        var response = postApi.anonymousRequest("/api/posts", DELETE);
         assertStatusCodeUnauthorized(response);
+    }
+
+    @Test(description = "Actuator health")
+    @Severity(CRITICAL)
+    public void getHealth() {
+        var actuatorApi = new ActuatorApiClient();
+        var response = actuatorApi.getHealth();
+        assertStatusCodeOk(response);
+        var healthResponse = response.as(HealthResponse.class);
+        assertEquals(healthResponse.getStatus(), "UP", "status");
+
     }
 
 }
