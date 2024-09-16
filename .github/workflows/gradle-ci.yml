@@ -2,8 +2,8 @@ name: Spring Boot App API tests
 
 on:
   push:
-    tags:
-      - 'rc-*'
+    branches:
+      - master
   pull_request:
     paths-ignore:
       - 'README.md'
@@ -22,7 +22,7 @@ jobs:
 
       - name: Build Spring Boot Docker image
         run: |
-          docker build -t spring-boot-app:latest ./app
+          docker build -t spring-boot-app:rc-1 ./app
 
       - name: Create Docker network
         run: docker network create my-network
@@ -45,7 +45,7 @@ jobs:
           --env SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/appdb \
           --env SPRING_DATASOURCE_USERNAME=appuser \
           --env SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_USER_PASSWORD }} \
-          spring-boot-app:latest
+          spring-boot-app:rc-1
 
       - name: Wait for PostgreSQL to be ready
         run: |
