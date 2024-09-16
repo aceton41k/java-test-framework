@@ -1,6 +1,9 @@
 package com.github.aceton41k.api.test;
 
 import com.github.aceton41k.api.ApiAsserts;
+import com.github.aceton41k.api.client.ActuatorApiClient;
+import com.github.aceton41k.api.model.actuator.ActuatorInfoResponse;
+import com.github.aceton41k.api.model.git.Build;
 import com.github.aceton41k.config.PropertyReader;
 import com.github.automatedowl.tools.AllureEnvironmentWriter;
 import com.google.common.collect.ImmutableMap;
@@ -14,6 +17,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Objects;
+import java.util.Optional;
 
 public class BaseApiTest extends ApiAsserts {
     static DSLContext dsl = null;
@@ -39,10 +43,18 @@ public class BaseApiTest extends ApiAsserts {
 
         closeConnection();
 
+        ActuatorApiClient actuatorApi = new ActuatorApiClient();
+        ActuatorInfoResponse response = actuatorApi.getInfo();
+        Optional<Build> buildOptional = Optional.ofNullable(response.getGit().getBuild()); // используем ofNullable, чтобы избежать NullPointerException
+        String version = buildOptional.map(Build::getVersion).orElse("none");
+
         AllureEnvironmentWriter.allureEnvironmentWriter(
                 ImmutableMap.<String, String>builder()
-                        .put("Backend version", "10.5.6.7")
-                        .put("Stand", PropertyReader.getBaseUrl())
+                        .put("Build branch", "%s (tag: %s)".formatted(
+                                response.getGit().getBranch(),
+                                version))
+                        .put("Commit No", response.getGit().getCommit().getId())
+                        .put("Stand url", PropertyReader.getBaseUrl())
                         .build(),
                 System.getProperty("user.dir") + "/build/allure-results/"
         );
