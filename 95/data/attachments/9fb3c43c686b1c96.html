@@ -1,0 +1,27 @@
+<div>POST to http://localhost:8080/auth/login</div>
+
+<h4>Body</h4>
+<div>
+    <pre class="preformated-text">
+{
+    &quot;email&quot;: &quot;major.jerde@yahoo.com&quot;,
+    &quot;password&quot;: &quot;8p0td&quot;
+}    </pre>
+</div>
+
+<h4>Headers</h4>
+<div>
+        <div>Accept: */*</div>
+        <div>User-Agent: Autotest-api-client</div>
+        <div>Content-Type: application/json</div>
+</div>
+
+
+
+<h4>Curl</h4>
+<div>
+curl -v -X POST &#39;http://localhost:8080/auth/login&#39; -H &#39;Accept: */*&#39; -H &#39;User-Agent: Autotest-api-client&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;email&quot;: &quot;major.jerde@yahoo.com&quot;,
+    &quot;password&quot;: &quot;8p0td&quot;
+}&#39;
+</div>
