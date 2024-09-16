@@ -46,25 +46,25 @@ dependencies {
     testImplementation 'org.projectlombok:lombok:1.18.34'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.14.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
-    implementation 'org.slf4j:slf4j-api:2.0.4'
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+    implementation 'ch.qos.logback:logback-classic:1.5.7'
     implementation 'com.sun.mail:javax.mail:1.6.2'
     runtimeOnly 'org.aspectj:aspectjweaver:1.9.22.1'
     implementation 'com.talanlabs:avatar-generator-cat:1.1.0'
     implementation 'com.github.automatedowl:allure-environment-writer:1.0.0'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'org.aeonbits.owner:owner:1.0.12'
-    allureRawResultElements(files("$buildDir/custom-allure-results"))
 }
 
 jooq {
-    version = '3.19.11'  // default (can be omitted)
-    edition = JooqEdition.OSS  // default (can be omitted)
+    version = '3.19.11'
+    edition = JooqEdition.OSS
 
 
 
     configurations {
-        test {  // name of the jOOQ configuration
-            generateSchemaSourceOnCompilation = false  // default (can be omitted)
+        test {
+            generateSchemaSourceOnCompilation = false
 
             generationTool {
                 logging = Logging.WARN
@@ -106,7 +106,7 @@ jooq {
                     }
                     target {
                         packageName = 'jooq'
-                        directory = 'src/test/generated'  // default (can be omitted)
+                        directory = 'src/test/generated'
                     }
                     strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
                 }

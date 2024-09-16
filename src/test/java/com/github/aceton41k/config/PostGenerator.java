@@ -10,8 +10,8 @@ public class PostGenerator {
     }
 
     public static Post generate() {
-        var title = faker.text().text();
-        var message = faker.text().text();
+        var title = faker.lorem().sentence();
+        var message = faker.lorem().sentence(20);
         return new Post()
                 .withTitle(title)
                 .withMessage(message);
