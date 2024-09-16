@@ -1,6 +1,7 @@
 package com.github.aceton41k.api.client;
 
 import com.github.aceton41k.config.PropertyReader;
+import io.qameta.allure.Step;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -37,6 +38,7 @@ public class BaseApiClient {
      * New request with initial RequestSpecification
      * <p>Useful for customized requests</p>
      */
+    @Step("Anonymous request")
     public Response anonymousRequest(String endpoint, Method method) {
         return given()
                 .spec(new RequestSpecBuilder()
