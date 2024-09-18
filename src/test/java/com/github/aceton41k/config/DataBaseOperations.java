@@ -7,6 +7,7 @@ import jooq.tables.records.PostsRecord;
 import org.jooq.DSLContext;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.testng.Assert.assertFalse;
 
@@ -20,9 +21,17 @@ public class DataBaseOperations {
     @Step("Insert post into db")
     public int insertPost(Post post) {
         dsl.insertInto(Posts.POSTS).columns(Posts.POSTS.TITLE, Posts.POSTS.MESSAGE)
-                .values(post.getTitle(), post.getMessage()).execute();
+                .values(post.title(), post.message()).execute();
 
-        return dsl.select(Posts.POSTS.ID).from(Posts.POSTS).where(Posts.POSTS.TITLE.eq(post.getTitle())).fetchOne().get(Posts.POSTS.ID);
+        var optional = Optional.ofNullable(dsl.select(Posts.POSTS.ID)
+                .from(Posts.POSTS)
+                .where(Posts.POSTS.TITLE.eq(post.title()))
+                .fetchOne());
+
+        if (optional.isPresent()) {
+            return optional.get().get(Posts.POSTS.ID);
+        } else
+            throw new RuntimeException("Result of query is empty");
     }
 
     @Step("Get post from db")

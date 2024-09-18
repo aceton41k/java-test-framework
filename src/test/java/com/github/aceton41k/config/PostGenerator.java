@@ -12,8 +12,6 @@ public class PostGenerator {
     public static Post generate() {
         var title = faker.lorem().sentence();
         var message = faker.lorem().sentence(20);
-        return new Post()
-                .withTitle(title)
-                .withMessage(message);
+        return new Post(message, title);
     }
 }

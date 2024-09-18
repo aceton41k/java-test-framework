@@ -1,16 +1,14 @@
 package com.github.aceton41k.api.model;
 
-import lombok.*;
+public record Post(
+        Integer id,
+        String title,
+        String message,
+        String createdAt,
+        String updatedAt
+) {
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@With
-public class Post extends JsonPrintable {
-    private Integer id;
-    private String title;
-    private String message;
-    private String createdAt;
-    private String updatedAt;
+    public Post(String message, String title) {
+        this(null, message, title, null, null);
+    }
 }
