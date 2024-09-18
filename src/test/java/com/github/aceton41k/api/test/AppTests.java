@@ -7,6 +7,7 @@ import com.github.aceton41k.api.client.UserApiClient;
 import com.github.aceton41k.api.model.Post;
 import com.github.aceton41k.api.model.UserResponse;
 import com.github.aceton41k.api.model.actuator.health.HealthResponse;
+import com.github.aceton41k.api.model.page.Page;
 import com.github.aceton41k.config.DataBaseOperations;
 import com.github.aceton41k.config.PostGenerator;
 import io.qameta.allure.Severity;
@@ -15,8 +16,6 @@ import io.restassured.common.mapper.TypeRef;
 import net.datafaker.Faker;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static io.qameta.allure.SeverityLevel.*;
 import static io.restassured.http.Method.DELETE;
@@ -125,9 +124,9 @@ public class AppTests extends BaseApiTest {
         var response = postApi.getPosts();
 
         assertStatusCodeOk(response);
-        List<Post> posts = response.as(new TypeRef<>() {
+        Page<Post> posts = response.as(new TypeRef<>() {
         });
-        assertTrue(posts.size() >= 2);
+        assertTrue(posts.getContent().size() >= 2);
 
     }
 
