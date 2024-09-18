@@ -55,9 +55,9 @@ public class AppTests extends BaseApiTest {
         var postResponse = response.as(Post.class);
         assertStatusCodeOk(response);
 
-        assertEquals(postResponse.getId(), insertedPostId, "id from response isn't equal to db's");
-        assertEquals(postResponse.getMessage(), post.getMessage(), "message from response isn't equal to db's");
-        assertEquals(postResponse.getTitle(), post.getTitle(), "title from response isn't equal to db's");
+        assertEquals(postResponse.id(), insertedPostId, "id from response isn't equal to db's");
+        assertEquals(postResponse.message(), post.message(), "message from response isn't equal to db's");
+        assertEquals(postResponse.title(), post.title(), "title from response isn't equal to db's");
     }
 
     @Test(description = "Create post")
@@ -68,16 +68,16 @@ public class AppTests extends BaseApiTest {
         assertStatusCreated(response);
         var postResponse = response.as(Post.class);
 
-        assertNotNull(postResponse.getId());
-        assertEquals(postResponse.getMessage(), post.getMessage(), "message from response isn't equal to generated");
-        assertEquals(postResponse.getTitle(), post.getTitle(), "title from response isn't equal to generated");
+        assertNotNull(postResponse.id());
+        assertEquals(postResponse.message(), post.message(), "message from response isn't equal to generated");
+        assertEquals(postResponse.title(), post.title(), "title from response isn't equal to generated");
 
-        int createdPostId = postResponse.getId();
+        int createdPostId = postResponse.id();
         var postFromDb = dbo.getPost(createdPostId);
 
         assertEquals(createdPostId, postFromDb.getId(), "id from response isn't equal to db's");
-        assertEquals(post.getTitle(), postFromDb.getTitle(), "title from response isn't equal to db's");
-        assertEquals(post.getMessage(), postFromDb.getMessage(), "message from response isn't equal to db's");
+        assertEquals(post.title(), postFromDb.getTitle(), "title from response isn't equal to db's");
+        assertEquals(post.message(), postFromDb.getMessage(), "message from response isn't equal to db's");
     }
 
     @Test(description = "Update post")
@@ -88,13 +88,13 @@ public class AppTests extends BaseApiTest {
         var response = postApi.updatePost(insertedPostId, updatedPost);
         assertStatusCodeOk(response);
         var postResponse = response.as(Post.class);
-        assertEquals(postResponse.getMessage(), updatedPost.getMessage(), "message from response is not equal to updated");
-        assertEquals(postResponse.getTitle(), updatedPost.getTitle(), "title from response is not equal to updated");
+        assertEquals(postResponse.message(), updatedPost.message(), "message from response is not equal to updated");
+        assertEquals(postResponse.title(), updatedPost.title(), "title from response is not equal to updated");
 
         var postRecord = dbo.getPost(insertedPostId);
-        assertEquals(postResponse.getId(), postRecord.getId(), "id from response is not equal to db's");
-        assertEquals(updatedPost.getTitle(), postRecord.getTitle(), "title from response is not equal to db's");
-        assertEquals(updatedPost.getMessage(), postRecord.getMessage(), "message from response is not equal to db's");
+        assertEquals(postResponse.id(), postRecord.getId(), "id from response is not equal to db's");
+        assertEquals(updatedPost.title(), postRecord.getTitle(), "title from response is not equal to db's");
+        assertEquals(updatedPost.message(), postRecord.getMessage(), "message from response is not equal to db's");
     }
 
     @Test(description = "Delete post")
