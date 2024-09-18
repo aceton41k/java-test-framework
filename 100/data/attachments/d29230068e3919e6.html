@@ -1,0 +1,34 @@
+<div>POST to http://localhost:8080/api/posts</div>
+
+<h4>Body</h4>
+<div>
+    <pre class="preformated-text">
+{
+    &quot;id&quot;: null,
+    &quot;title&quot;: &quot;Consectetur repellat quisquam eos nihil rerum sint rerum neque nobis tenetur explicabo quaerat ex suscipit placeat dicta dolorem quam explicabo aliquid corrupti.&quot;,
+    &quot;message&quot;: &quot;Iure porro cum quae eveniet amet sequi eius.&quot;,
+    &quot;createdAt&quot;: null,
+    &quot;updatedAt&quot;: null
+}    </pre>
+</div>
+
+<h4>Headers</h4>
+<div>
+        <div>Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0ZXJyeS53YWx0ZXJAaG90bWFpbC5jb20iLCJpYXQiOjE3MjY2ODc2MTUsImV4cCI6MTcyNjcwNTYxNX0.SRXssIet5a9VNbHchmnuix0mBrPPaKVDM6I34DRrKCu93PqXthh-Lth_PsTfy2v-</div>
+        <div>User-Agent: Autotest-api-client</div>
+        <div>Accept: */*</div>
+        <div>Content-Type: application/json</div>
+</div>
+
+
+
+<h4>Curl</h4>
+<div>
+curl -v -X POST &#39;http://localhost:8080/api/posts&#39; -H &#39;Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0ZXJyeS53YWx0ZXJAaG90bWFpbC5jb20iLCJpYXQiOjE3MjY2ODc2MTUsImV4cCI6MTcyNjcwNTYxNX0.SRXssIet5a9VNbHchmnuix0mBrPPaKVDM6I34DRrKCu93PqXthh-Lth_PsTfy2v-&#39; -H &#39;User-Agent: Autotest-api-client&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;id&quot;: null,
+    &quot;title&quot;: &quot;Consectetur repellat quisquam eos nihil rerum sint rerum neque nobis tenetur explicabo quaerat ex suscipit placeat dicta dolorem quam explicabo aliquid corrupti.&quot;,
+    &quot;message&quot;: &quot;Iure porro cum quae eveniet amet sequi eius.&quot;,
+    &quot;createdAt&quot;: null,
+    &quot;updatedAt&quot;: null
+}&#39;
+</div>
