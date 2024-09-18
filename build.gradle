@@ -42,8 +42,9 @@ dependencies {
     implementation 'io.qameta.allure:allure-java-commons:2.22.0'
     implementation 'io.qameta.allure:allure-rest-assured:2.22.0'
     implementation 'net.datafaker:datafaker:2.3.1'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
-    testImplementation 'org.projectlombok:lombok:1.18.34'
+    implementation 'org.projectlombok:lombok:1.18.34'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.14.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
     implementation 'org.slf4j:slf4j-api:2.0.16'
@@ -63,7 +64,7 @@ jooq {
 
 
     configurations {
-        test {
+        main {
             generateSchemaSourceOnCompilation = false
 
             generationTool {
@@ -106,7 +107,7 @@ jooq {
                     }
                     target {
                         packageName = 'jooq'
-                        directory = 'src/test/generated'
+                        directory = 'src/main/generated'
                     }
                     strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
                 }
@@ -115,19 +116,11 @@ jooq {
     }
 }
 
-// Опция для исключения генерации JOOQ во время тестов
-def skipJooqGeneration = project.hasProperty('skipJooqGeneration')
-
-tasks.named('generateTestJooq') {
-    if (skipJooqGeneration) {
-        enabled = false
-    }
-}
 
 sourceSets {
-    test {
+    main {
         java {
-            srcDirs 'src/test/generated'
+            srcDirs 'src/main/generated'
         }
     }
 }
