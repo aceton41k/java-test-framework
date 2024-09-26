@@ -7,7 +7,9 @@ import com.github.aceton41k.client.AuthApiClient;
 import com.github.aceton41k.client.PostApiClient;
 import com.github.aceton41k.client.UserApiClient;
 import com.github.aceton41k.config.DataBaseOperations;
-import com.github.aceton41k.config.PostGenerator;
+import com.github.aceton41k.config.TestDataGenerator;
+import com.github.aceton41k.model.Comment;
+import com.github.aceton41k.model.ErrorResponse;
 import com.github.aceton41k.model.Post;
 import com.github.aceton41k.model.UserResponse;
 import com.github.aceton41k.model.page.Page;
@@ -16,12 +18,16 @@ import io.qameta.allure.testng.Tag;
 import io.restassured.common.mapper.TypeRef;
 import net.datafaker.Faker;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+
+import java.time.Instant;
 
 import static io.qameta.allure.SeverityLevel.*;
 import static io.restassured.http.Method.DELETE;
 import static io.restassured.http.Method.GET;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.testng.Assert.*;
 
 
@@ -30,6 +36,7 @@ public class AppTests extends BaseApiTest {
     PostApiClient postApi;
     UserApiClient userApi;
     DataBaseOperations dbo;
+    DataBaseAsserts dba;
     Faker faker = new Faker();
     String email = faker.internet().emailAddress();
     String fullName = faker.name().fullName();
@@ -40,6 +47,7 @@ public class AppTests extends BaseApiTest {
     public void beforeClass() {
 
         dbo = new DataBaseOperations(dsl);
+        dba = new DataBaseAsserts(dsl);
         postApi = new PostApiClient();
         userApi = new UserApiClient();
         AuthApiClient authApi = new AuthApiClient();
@@ -50,8 +58,8 @@ public class AppTests extends BaseApiTest {
     @Test(description = "Get post")
     @Severity(BLOCKER)
     public void getPost() {
-        Post post = PostGenerator.generate();
-        int insertedPostId = dbo.insertPost(post);
+        Post post = TestDataGenerator.generatePost();
+        long insertedPostId = dbo.insertPost(post);
         var response = postApi.getPost(insertedPostId);
         var postResponse = response.as(Post.class);
         assertStatusCodeOk(response);
@@ -65,18 +73,22 @@ public class AppTests extends BaseApiTest {
             retryAnalyzer = RetryAnalyzer.class)
     @Severity(BLOCKER)
     public void createPost() {
-        var post = PostGenerator.generate();
+        Instant createdDate = Instant.now();
+        var post = TestDataGenerator.generatePost();
         var response = postApi.createPost(post);
         assertStatusCreated(response);
         var postResponse = response.as(Post.class);
+        Long createdPostId = postResponse.id();
 
         assertNotNull(postResponse.id());
         assertEquals(postResponse.message(), post.message(), "message from response isn't equal to generated");
         assertEquals(postResponse.title(), post.title(), "title from response isn't equal to generated");
 
-        int createdPostId = postResponse.id();
-        var postFromDb = dbo.getPost(createdPostId);
 
+        var postFromDb = dbo.getPost(createdPostId);
+        Instant createdDateResponse = Instant.parse(postResponse.createdAt());
+
+        assertDatesEquals(createdDate, createdDateResponse, 1, SECONDS);
         assertEquals(createdPostId, postFromDb.getId(), "id from response isn't equal to db's");
         assertEquals(post.title(), postFromDb.getTitle(), "title from response isn't equal to db's");
         assertEquals(post.message(), postFromDb.getMessage(), "message from response isn't equal to db's");
@@ -85,8 +97,8 @@ public class AppTests extends BaseApiTest {
     @Test(description = "Update post")
     @Severity(BLOCKER)
     public void updatePost() {
-        int insertedPostId = dbo.insertPost(PostGenerator.generate());
-        var updatedPost = PostGenerator.generate();
+        long insertedPostId = dbo.insertPost(TestDataGenerator.generatePost());
+        var updatedPost = TestDataGenerator.generatePost();
         var response = postApi.updatePost(insertedPostId, updatedPost);
         assertStatusCodeOk(response);
         var postResponse = response.as(Post.class);
@@ -102,24 +114,24 @@ public class AppTests extends BaseApiTest {
     @Test(description = "Delete post")
     @Severity(BLOCKER)
     public void deletePost() {
-        int insertedPostId = dbo.insertPost(PostGenerator.generate());
+        long insertedPostId = dbo.insertPost(TestDataGenerator.generatePost());
         var response = postApi.deletePost(insertedPostId);
         assertStatusNoContent(response);
-        dbo.assertPostDoesNotExist(insertedPostId, "post that should be deleted exists in db");
+        dba.assertPostNotExist(insertedPostId, "post that should be deleted exists in db");
     }
 
     @Test(description = "Delete post not exists", groups = {"negative"})
     @Severity(MINOR)
     public void deletePostNotExist() {
-        var response = postApi.deletePost(999999);
+        var response = postApi.deletePost(999999L);
         assertStatusCodeNotFound(response);
     }
 
     @Test(description = "Get posts")
     @Severity(BLOCKER)
     public void getPosts() {
-        var post1 = PostGenerator.generate();
-        var post2 = PostGenerator.generate();
+        var post1 = TestDataGenerator.generatePost();
+        var post2 = TestDataGenerator.generatePost();
         dbo.insertPost(post1);
         dbo.insertPost(post2);
 
@@ -135,13 +147,13 @@ public class AppTests extends BaseApiTest {
     @Test(description = "Get posts with paging params")
     @Severity(BLOCKER)
     public void getPostsParams() {
-        var post1 = PostGenerator.generate();
-        var post2 = PostGenerator.generate();
+        var post1 = TestDataGenerator.generatePost();
+        var post2 = TestDataGenerator.generatePost();
         dbo.insertPost(post1);
         dbo.insertPost(post2);
-        String size = "2";
-        String page = "3";
-        var response = postApi.getPosts("2", "3");
+        int size = 2;
+        int page = 3;
+        var response = postApi.getPosts(size, page);
 
         assertStatusCodeOk(response);
         Page<Post> postsResponse = response.as(new TypeRef<>() {
@@ -151,27 +163,140 @@ public class AppTests extends BaseApiTest {
     }
 
     @Test(description = "Get posts with empty paging params",
+            dataProvider = "pageParamsDataProvider",
             groups = {"negative"})
     @Severity(BLOCKER)
-    public void getPostsEmptyParams() {
-        var response = postApi.getPosts("", "");
+    public void getPostsPageParams(Integer size, Integer page) {
+        var response = postApi.getPosts(size, page);
         assertStatusCodeOk(response);
+    }
+
+    @Test
+    public void getPostsInvalidParamsPage() {
+        var response = postApi.getPosts(0, -1);
+        assertInternalServerError(response);
+        ErrorResponse error =  response.as(ErrorResponse.class);
+        assertEquals(error.getDetail(), "Page index must not be less than zero");
+    }
+
+    @Test
+    public void getPostsInvalidParamsSize() {
+        var response = postApi.getPosts(0, 1);
+        assertInternalServerError(response);
+        ErrorResponse error =  response.as(ErrorResponse.class);
+        assertEquals(error.getDetail(), "Page size must not be less than one");
+    }
+
+    @Test
+    public void getPostsInvalidParamsPage2() {
+        var response = postApi.getPosts(5, -1);
+        assertInternalServerError(response);
+        ErrorResponse error =  response.as(ErrorResponse.class);
+        assertEquals(error.getDetail(), "Page index must not be less than zero");
+    }
+
+
+
+    @DataProvider(name = "pageParamsDataProvider")
+    public Object[][] pageParamsDataProvider() {
+        return new Object[][]{{null, null}, {2, null}, {null, 1}, {1, 2}};
     }
 
     @Test(description = "Get post not exists",
             groups = {"negative"})
     @Severity(MINOR)
     public void getPostNotExist() {
-        var response = postApi.getPost(999999);
+        var response = postApi.getPost(999999L);
         assertStatusCodeNotFound(response);
     }
 
     @Test(description = "Update post not exists", groups = {"negative"})
     @Severity(MINOR)
     public void updatePostNotExist() {
-        var post = PostGenerator.generate();
-        var response = postApi.updatePost(999999, post);
+        var post = TestDataGenerator.generatePost();
+        var response = postApi.updatePost(999999L, post);
         assertStatusCodeNotFound(response);
+    }
+
+    @Test
+    public void addComment() {
+        var post = TestDataGenerator.generatePost();
+        var postResponse = postApi.createPost(post).as(Post.class);
+        var postId = postResponse.id();
+        var generatedComment = TestDataGenerator.generateComment();
+        var response = postApi.addComment(postId, generatedComment);
+        Instant commentCreatedDateTest = Instant.now();
+        assertStatusCreated(response);
+        Comment commentResponse = response.as(Comment.class);
+
+        Instant commentCreatedDateResponse = Instant.parse(commentResponse.getCreatedAt());
+        assertDatesEquals(commentCreatedDateTest, commentCreatedDateResponse, 1, SECONDS);
+
+        var commentFromDb = dbo.getComment(commentResponse.getId());
+        assertEquals(commentResponse.getId(), commentFromDb.getId());
+        assertEquals(commentResponse.getMessage(), commentFromDb.getMessage());
+    }
+
+    @Test
+    public void updateComment() {
+        var post = TestDataGenerator.generatePost();
+        var postId = postApi.createPost(post).as(Post.class).id();
+        var comment = TestDataGenerator.generateComment();
+        var commentId = postApi.addComment(postId, comment)
+                .as(Comment.class).getId();
+
+        String editedMessage = "Edited message";
+        var editedComment = new Comment().withMessage(editedMessage);
+        var response = postApi.updateComment(postId, commentId, editedComment);
+
+        Instant commentUpdatedDateTest = Instant.now();
+        assertStatusCodeOk(response);
+        Comment commentResponse = response.as(Comment.class);
+
+        assertEquals(commentResponse.getMessage(), editedMessage, "message from response and edited are not equal");
+
+        Instant commentUpdatedDateResponse = Instant.parse(commentResponse.getUpdatedAt());
+        assertDatesEquals(commentUpdatedDateTest, commentUpdatedDateResponse, 1, SECONDS);
+    }
+
+    @Test
+    public void deleteComment() {
+        var post = TestDataGenerator.generatePost();
+        var postId = postApi.createPost(post).as(Post.class).id();
+        var comment = TestDataGenerator.generateComment();
+        var commentId = postApi.addComment(postId, comment)
+                .as(Comment.class).getId();
+
+        String editedMessage = "Edited message";
+        var response = postApi.deleteComment(postId, commentId);
+
+        assertStatusNoContent(response);
+
+        dba.assertCommentNotExist(commentId);
+
+        var getCommentResponse = postApi.getComment(postId, commentId);
+        assertStatusCodeNotFound(getCommentResponse);
+    }
+
+    @Test
+    public void deleteCommentNotExist() {
+        long commentIdNotExist = 999999L;
+        var post = TestDataGenerator.generatePost();
+        var postId = postApi.createPost(post).as(Post.class).id();
+        var response = postApi.deleteComment(postId, commentIdNotExist);
+        assertStatusCodeNotFound(response);
+        var error = response.as(ErrorResponse.class);
+        assertEquals(error.getDetail(), "Comment with ID %d was not found".formatted(commentIdNotExist));
+        assertEquals(error.getInstance(), "/api/posts/%s/comments/%s".formatted(postId, commentIdNotExist));
+    }
+
+    @Test
+    public void deleteCommentPostNotExist() {
+        long postIdNotExist = 999999L;
+        var response = postApi.deleteComment(postIdNotExist, 999999L);
+        assertStatusCodeNotFound(response);
+        var error = response.as(ErrorResponse.class);
+        assertEquals(error.getDetail(), "Post with ID %d was not found".formatted(postIdNotExist));
     }
 
     @Test(description = "Get method that throws exception", groups = {"negative"})

@@ -1,7 +1,7 @@
 package com.github.aceton41k.unit;
 
 import com.github.aceton41k.config.AvatarGenerator;
-import com.github.aceton41k.config.PostGenerator;
+import com.github.aceton41k.config.TestDataGenerator;
 import com.github.aceton41k.model.UserResponse;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
@@ -21,7 +21,7 @@ public class UnitTests {
 
     @Test
     public void postGeneratorTest() {
-        var post = PostGenerator.generate();
+        var post = TestDataGenerator.generatePost();
         assertFalse(post.title().isEmpty());
         assertFalse(post.message().isEmpty());
 

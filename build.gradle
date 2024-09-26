@@ -55,6 +55,7 @@ dependencies {
     implementation 'com.github.automatedowl:allure-environment-writer:1.0.0'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'org.aeonbits.owner:owner:1.0.12'
+    testImplementation 'org.assertj:assertj-core:3.26.3'
 }
 
 jooq {

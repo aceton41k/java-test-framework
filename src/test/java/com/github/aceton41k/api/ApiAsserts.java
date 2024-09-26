@@ -3,7 +3,12 @@ package com.github.aceton41k.api;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class ApiAsserts {
 
@@ -34,6 +39,12 @@ public class ApiAsserts {
 
     public void assertStatusCreated(Response response) {
         assertStatusCode(response, HttpStatus.SC_CREATED);
+    }
+
+    public void assertDatesEquals(Instant actual, Instant expected,  int delta, ChronoUnit units) {
+        assertTrue(Duration.between(actual, expected).get(units) <= delta,
+                "Dates are differ on more than %d %s:\n%s\n%s\n"
+                        .formatted(delta, units, actual, expected));
     }
 
 }

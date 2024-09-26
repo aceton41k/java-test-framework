@@ -2,14 +2,14 @@ package com.github.aceton41k.config;
 
 import com.github.aceton41k.model.Post;
 import io.qameta.allure.Step;
+import jooq.tables.Comments;
 import jooq.tables.Posts;
+import jooq.tables.records.CommentsRecord;
 import jooq.tables.records.PostsRecord;
 import org.jooq.DSLContext;
 
 import java.util.Objects;
 import java.util.Optional;
-
-import static org.testng.Assert.assertFalse;
 
 public class DataBaseOperations {
     DSLContext dsl;
@@ -19,7 +19,7 @@ public class DataBaseOperations {
     }
 
     @Step("Insert post into db")
-    public int insertPost(Post post) {
+    public Long insertPost(Post post) {
         dsl.insertInto(Posts.POSTS).columns(Posts.POSTS.TITLE, Posts.POSTS.MESSAGE)
                 .values(post.title(), post.message()).execute();
 
@@ -35,14 +35,14 @@ public class DataBaseOperations {
     }
 
     @Step("Get post from db")
-    public PostsRecord getPost(int postId) {
+    public PostsRecord getPost(Long postId) {
         return Objects.requireNonNull(dsl.selectFrom(Posts.POSTS)
                 .where(Posts.POSTS.ID.eq(postId)).fetchOne());
     }
 
-    public void assertPostDoesNotExist(int postId, String message) {
-        assertFalse(Objects.requireNonNull(dsl.selectCount()
-                .from(Posts.POSTS)
-                .where(Posts.POSTS.ID.eq(postId)).fetchOne()).value1() != 0, message);
+    @Step("Get comment from db")
+    public CommentsRecord getComment(Long commentId) {
+        return Objects.requireNonNull(dsl.selectFrom(Comments.COMMENTS)
+                .where(Comments.COMMENTS.ID.eq(commentId)).fetchOne());
     }
 }
