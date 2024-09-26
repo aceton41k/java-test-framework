@@ -46,6 +46,7 @@ jobs:
           --env SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/appdb \
           --env SPRING_DATASOURCE_USERNAME=appuser \
           --env SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_USER_PASSWORD }} \
+          --env SECURITY_JWT_SECRET_KEY=${{ secrets.SECURITY_JWT_SECRET_KEY }} \
           spring-boot-app:latest
 
       - name: Wait for PostgreSQL to be ready
