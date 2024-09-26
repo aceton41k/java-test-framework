@@ -18,12 +18,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: aceton41k/spring-boot-app
-          ref: release
+          ref: main
           path: app
 
       - name: Build Spring Boot Docker image
         run: |
-          docker build -t spring-boot-app:release ./app
+          docker build -t spring-boot-app:latest ./app
 
       - name: Create Docker network
         run: docker network create my-network
@@ -46,7 +46,8 @@ jobs:
           --env SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/appdb \
           --env SPRING_DATASOURCE_USERNAME=appuser \
           --env SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_USER_PASSWORD }} \
-          spring-boot-app:release
+          --env SECURITY_JWT_SECRET_KEY=${{ secrets.SECURITY_JWT_SECRET_KEY }} \
+          spring-boot-app:latest
 
       - name: Wait for PostgreSQL to be ready
         run: |
