@@ -12,8 +12,13 @@ import org.jooq.impl.SQLDataType;
 /**
  * Convenience access to all sequences in public.
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Sequences {
+
+    /**
+     * The sequence <code>public.tasks_seq</code>
+     */
+    public static final Sequence<Long> TASKS_SEQ = Internal.createSequence("tasks_seq", Public.PUBLIC, SQLDataType.BIGINT.nullable(false), null, 50, null, null, false, null);
 
     /**
      * The sequence <code>public.users_seq</code>

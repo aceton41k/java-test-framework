@@ -1,5 +1,6 @@
 package com.github.aceton41k.client;
 
+import com.github.aceton41k.model.Comment;
 import com.github.aceton41k.model.Post;
 import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
@@ -11,7 +12,7 @@ public class PostApiClient extends BaseApiClient {
 
 
     @Step("Get post")
-    public Response getPost(int id) {
+    public Response getPost(Long id) {
         return given().spec(reqSpec)
                 .contentType(ContentType.JSON)
                 .get("/api/posts/{id}", id);
@@ -25,7 +26,7 @@ public class PostApiClient extends BaseApiClient {
     }
 
     @Step("Get posts")
-    public Response getPosts(String size, String page) {
+    public Response getPosts(Integer size, Integer page) {
         return given().spec(reqSpec)
                 .contentType(ContentType.JSON)
                 .queryParam("size", size)
@@ -42,13 +43,13 @@ public class PostApiClient extends BaseApiClient {
     }
 
     @Step("Delete post")
-    public Response deletePost(int id) {
+    public Response deletePost(Long id) {
         return given().spec(reqSpec)
                 .delete("/api/posts/{id}", id);
     }
 
     @Step("Update post")
-    public Response updatePost(int id, Post post) {
+    public Response updatePost(Long id, Post post) {
         return given()
                 .spec(reqSpec)
                 .contentType(ContentType.JSON)
@@ -57,12 +58,57 @@ public class PostApiClient extends BaseApiClient {
 
     }
 
+    @Step("Add comment to post")
+    public Response addComment(Long postId, Comment comment) {
+        return given()
+                .spec(reqSpec)
+                .contentType(ContentType.JSON)
+                .body(comment)
+                .post("/api/posts/{id}/comments", postId);
+    }
+
+    @Step("Get comment")
+    public Response getComment(Long postId, Long commentId) {
+        return given()
+                .spec(reqSpec)
+                .contentType(ContentType.JSON)
+                .get("/api/posts/{postIdd}/comments/{commentId}", postId, commentId);
+    }
+
+    @Step("Get all comments of post")
+    public Response getComments(Long postId) {
+        return given()
+                .spec(reqSpec)
+                .contentType(ContentType.JSON)
+                .get("/api/posts/{postIdd}/comments", postId);
+    }
+
+
+    @Step("Update comment")
+    public Response updateComment(Long postId, Long commentId, Comment comment) {
+        return given()
+                .spec(reqSpec)
+                .contentType(ContentType.JSON)
+                .body(comment)
+                .put("/api/posts/{postId}/comments/{commentId}", postId, commentId);
+    }
+
+    @Step("Delete comment")
+    public Response deleteComment(Long postId, Long commentId) {
+        return given()
+                .spec(reqSpec)
+                .contentType(ContentType.JSON)
+                .delete("/api/posts/{postId}/comments/{commentId}", postId, commentId);
+    }
+
+
+
     @Step("Get method with exception")
     public Response exception() {
         return given()
                 .spec(reqSpec)
                 .contentType(ContentType.JSON)
-                .get("/api/ex");
+                .get("/api/posts/ex");
     }
 
 }
