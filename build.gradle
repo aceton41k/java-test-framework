@@ -135,7 +135,9 @@ test {
         showFailedStandardStreams false
         showExceptions false
     }
-    useTestNG()
+    useTestNG() {
+        suites 'src/test/resources/testng.xml'
+    }
 
     systemProperties = [
             'db.url': dbUrl,

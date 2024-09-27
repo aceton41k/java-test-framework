@@ -111,5 +111,29 @@ public class PostApiClient extends BaseApiClient {
                 .get("/api/posts/ex");
     }
 
+    @Step("Create task")
+    public Response createTask(Integer duration) {
+        return given()
+                .spec(reqSpec)
+                .contentType(ContentType.JSON)
+                .queryParam("duration", duration)
+                .post("/api/tasks");
+    }
+
+    @Step("Get task")
+    public Response getTask(Long id) {
+        return given()
+                .spec(reqSpec)
+                .contentType(ContentType.JSON)
+                .get("/api/tasks/{id}", id);
+    }
+
+    @Step("Get task")
+    public Response getAllTasks() {
+        return given()
+                .spec(reqSpec)
+                .contentType(ContentType.JSON)
+                .get("/api/tasks");
+    }
 }
 
