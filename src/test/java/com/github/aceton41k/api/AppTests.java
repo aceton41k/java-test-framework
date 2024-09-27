@@ -267,7 +267,6 @@ public class AppTests extends BaseApiTest {
         var commentId = postApi.addComment(postId, comment)
                 .as(Comment.class).getId();
 
-        String editedMessage = "Edited message";
         var response = postApi.deleteComment(postId, commentId);
 
         assertStatusNoContent(response);

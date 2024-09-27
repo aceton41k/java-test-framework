@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="ParallelTests" parallel="methods" thread-count="10">
+    <test name="All tests">
+        <classes>
+            <class name="com.github.aceton41k.unit.UnitTests"/>
+            <class name="com.github.aceton41k.api.AppTests"/>
+            <class name="com.github.aceton41k.api.AsyncTasksTest"/>
+        </classes>
+    </test>
+</suite>
