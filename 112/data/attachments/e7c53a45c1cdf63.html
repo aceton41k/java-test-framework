@@ -1,0 +1,30 @@
+<div>POST to http://localhost:8080/auth/signup</div>
+
+<h4>Body</h4>
+<div>
+    <pre class="preformated-text">
+{
+    &quot;email&quot;: &quot;yanira.braun@yahoo.com&quot;,
+    &quot;password&quot;: &quot;6gju2&quot;,
+    &quot;fullName&quot;: &quot;Alphonso Morissette&quot;
+}    </pre>
+</div>
+
+<h4>Headers</h4>
+<div>
+        <div>Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjb2RpLnJlaWNoZXJ0QGhvdG1haWwuY29tIiwiaWF0IjoxNzI3NDUwNTkxLCJleHAiOjE3Mjc0Njg1OTF9.tFpOkKX7OI4CJuF3x7Z1nqliuDiVMf2xSVcSF-mu6F53ZGY822P88TQ7Q6hyz33A</div>
+        <div>User-Agent: Autotest-api-client</div>
+        <div>Accept: */*</div>
+        <div>Content-Type: application/json</div>
+</div>
+
+
+
+<h4>Curl</h4>
+<div>
+curl -v -X POST &#39;http://localhost:8080/auth/signup&#39; -H &#39;Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjb2RpLnJlaWNoZXJ0QGhvdG1haWwuY29tIiwiaWF0IjoxNzI3NDUwNTkxLCJleHAiOjE3Mjc0Njg1OTF9.tFpOkKX7OI4CJuF3x7Z1nqliuDiVMf2xSVcSF-mu6F53ZGY822P88TQ7Q6hyz33A&#39; -H &#39;User-Agent: Autotest-api-client&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;email&quot;: &quot;yanira.braun@yahoo.com&quot;,
+    &quot;password&quot;: &quot;6gju2&quot;,
+    &quot;fullName&quot;: &quot;Alphonso Morissette&quot;
+}&#39;
+</div>
