@@ -1,4 +1,4 @@
-package com.github.aceton41k.ui;
+package com.github.aceton41k.web;
 
 import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.*;
